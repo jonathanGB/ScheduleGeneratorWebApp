@@ -1,0 +1,21 @@
+{
+    "name" : "uOttawa-Calendar-Generator", 
+    "description" : "Automatically grabs your uOttawa schedule of the semester and populates your favourite electronic calendar (google calendar, iCloud calendar, etc.) with your courses.",
+    "keywords" : ["uOttawa", "automatic", "calendar", "API", "cronofy", "google calendar", "schedule"],
+    "homepage" : "https://github.com/jonathanGB/uOttawa_Calendar_Generator",
+    "version" : "0.0.1",
+    "author" : {
+        "name" : "Jonathan Guillotte-Blouin",
+        "email" : "jonathan.guillotte.blouin@gmail.com",
+        "url" : "http://jonathanGB.com"
+    },
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/jonathanGB/uOttawa_Calendar_Generator.git"
+    },
+    "bugs" : "https://github.com/jonathanGB/uOttawa_Calendar_Generator/issues",
+    "dependencies" : { 
+        "cheerio": "~0.19.x"
+    },
+    "license": "MIT"
+}
