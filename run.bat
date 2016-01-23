@@ -26,7 +26,6 @@ echo == GRABBING LOGIN COOKIE
 echo ...
 curl  -s -c cookies.txt -L -X POST -d "name=%username%&pass=%pass%&form_build_id=%formId%&form_id=user_login_block&op=Login" "https://uozone2.uottawa.ca/user/login?language=en" | node verifyLogin.js > formResults.txt
 set /p formResults=<formResults.txt
-echo heerrrreeeee
 
 if "%formResults%"=="bad" ( 
 	echo == WRONG CREDENTIALS
@@ -59,11 +58,19 @@ if exist cookies.txt DEL cookies.txt
 if exist formResults.txt DEL formResults.txt
 if exist scheduleResults.txt DEL scheduleResults.txt
 
+if defined formId set formId=
+if defined username set username=
+if defined pass set pass=
+if defined formResults set formResults=
+if defined scheduleResults set scheduleResults=
+
 echo.
 echo FINISHED
 
-set /p deleteHtml=Do you want to delete the schedule.html file? y/n
+set /p deleteHtml=Do you want to delete the schedule.html file? y/n 
 
 if "%deleteHtml%"=="y" (
 	if exist schedule.html DEL schedule.html
 )
+
+set deleteHtml=
