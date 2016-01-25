@@ -15,6 +15,7 @@
     },
     "bugs" : "https://github.com/jonathanGB/uOttawa_Calendar_Generator/issues",
     "dependencies" : { 
+        "lodash": "~4.0.x",
         "cheerio": "~0.19.x",
         "cronofy": "~1.0.x"
     },
