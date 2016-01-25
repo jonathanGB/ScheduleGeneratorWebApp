@@ -24,7 +24,7 @@ echo.
 
 echo == GRABBING LOGIN COOKIE
 echo ...
-curl  -s -c cookies.txt -L -X POST -d "name=%username%&pass=%pass%&form_build_id=%formId%&form_id=user_login_block&op=Login" "https://uozone2.uottawa.ca/user/login?language=en" | node verifyLogin.js > formResults.txt
+curl  -s -c schedule_cookie.txt -L -X POST -d "name=%username%&pass=%pass%&form_build_id=%formId%&form_id=user_login_block&op=Login" "https://uozone2.uottawa.ca/user/login?language=en" | node verifyLogin.js > formResults.txt
 set /p formResults=<formResults.txt
 
 if "%formResults%"=="bad" ( 
@@ -38,7 +38,8 @@ if "%formResults%"=="bad" (
 	:: debug this part, with the chain of redirects
 	echo == GRABBING CURRENT SEMESTER' SCHEDULE
 	echo ...
-	curl -s -b cookies.txt -L "https://uozone2.uottawa.ca/academic" > schedule.html > node verifyLogin.js > scheduleResults.txt
+	curl -s -b schedule_cookie.txt -L "https://uozone2.uottawa.ca/academic" > schedule.html
+	node verifyLogin.js < schedule.html > scheduleResults.txt
 	set /p scheduleResults=<scheduleResults.txt
 	echo == REQUEST COMPLETE
 
