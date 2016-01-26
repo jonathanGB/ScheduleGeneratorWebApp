@@ -1,5 +1,3 @@
-// TODO: implement findCourses() and change insertIntoCalendar options with the course properties
-
 var cronofy = require('cronofy');
 var fs = require('fs');
 var cheerio = require('cheerio');
@@ -7,6 +5,7 @@ var cheerio = require('cheerio');
 const CRONOFY_TOKEN = "cronofy_token"; // if you set a different environment variable name, change it here
 var currEventId;
 var calendarId;
+
 
 // get event_id, which is needed to add events to cronofy
 function getCurrEventId() {
@@ -21,6 +20,7 @@ function getCurrEventId() {
 // set event_id at the end, so future calls will start with the right Id (and not overwrite previous events)
 function setCurrEventId() {
 	fs.writeFile('currEventId.txt', currEventId);
+	console.log('== API CALLS FINISHED. CALENDAR FULLY GENERATED');
 }
 
 // get the calendar_id, which is needed by cronofy
@@ -38,10 +38,9 @@ function getCalendarId(callback) {
 }
 
 // schedule parser
+// for every new time slot, call insertIntoCalendar() with a litteral object containing information about the course
+// if last iteration, add setCurrEventId() as a callback to insertIntoCalendar()
 function findCourses() {
- // to implement
- // for every new time slot, call insertIntoCalendar() with a litteral object containing information about the course
- // if last iteration, add setCurrEventId() as a callback to insertIntoCalendar()
  var dayValue = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
  var schedule = fs.readFileSync('schedule.html', 'utf8');
 
@@ -69,7 +68,6 @@ function findCourses() {
  		periodEnd.setDate(periodEnd.getDate() + diffFromStart);
  		var periodType = $row.children('td').eq(3).text().trim();
  		var periodLocation = $row.children('td').eq(4).text().trim();
-
 
 
 	 	// loop through recurring slots of the event
