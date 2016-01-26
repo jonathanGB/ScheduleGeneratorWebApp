@@ -2,7 +2,7 @@
 
 Automatically grabs your uOttawa schedule of the semester and populates your favourite electronic calendar (google calendar, iCloud calendar, etc.) with your courses.
 
-Still in development, should eventually be working on Windows CMD and *nix systems.
+**Still in development, should eventually be working on Windows CMD and *nix systems.**
 
 ## How to Install
 
