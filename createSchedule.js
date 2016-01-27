@@ -10,7 +10,7 @@ var calendarId;
 // get event_id, which is needed to add events to cronofy
 function getCurrEventId() {
 	try {
-		currEventId = fs.readFileSync('currEventId')
+		currEventId = fs.readFileSync('currEventId.txt')
 	} catch (e) {
 		currEventId = 0;
 		fs.writeFile('currEventId.txt', '0');
@@ -56,6 +56,8 @@ function findCourses() {
  	var semesterStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0]);
  	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3] + ' 23:59');
 
+
+
  	// iterate through the different periods of a course
  	for (var j = 0, p = $('tr', $table.children('tbody')).length; j < p; j++) {
  		var $row = $('tr', $table.children('tbody')).eq(j);
@@ -69,15 +71,16 @@ function findCourses() {
  		var periodType = $row.children('td').eq(3).text().trim();
  		var periodLocation = $row.children('td').eq(4).text().trim();
 
+ 		console.log('== Inserting ' + courseSymbol + ' - ' + periodType + ' from ' + periodTime[0] + ' to ' + periodTime[2]);
 
 	 	// loop through recurring slots of the event
 		do {
 		 	var courseObj = {
-		 		title: courseTitle, // done
-		 		symbol: courseSymbol, // done
-		 		type: periodType, // done
-		 		start: periodStart, // done
-		 		end: periodEnd, // done
+		 		title: courseTitle,
+		 		symbol: courseSymbol,
+		 		type: periodType,
+		 		start: periodStart.toISOString(),
+		 		end: periodEnd.toISOString(),
 		 		location: periodLocation
 		 	};
 
@@ -106,9 +109,9 @@ function insertIntoCalendar(course, callback) {
 	var options = {
 		calendar_id: calendarId,
 	    access_token: process.env[CRONOFY_TOKEN],
-	    event_id: "cronofy-school" + currEventId++,
-	    summary: course.title,
-	    description: course.type + '-' + course.symbol,
+	    event_id: "cronofy-school-" + currEventId++,
+	    summary: course.symbol + ' - ' + course.type,
+	    description: course.title,
 	    tzid: 'America/Montreal',
 	    start: course.start,
 	    end: course.end,
@@ -117,11 +120,10 @@ function insertIntoCalendar(course, callback) {
 	    }
 	};
 
+
 	cronofy.createEvent(options, function (err, response) {
 		if (err) {
-			console.log("== PROBLEM CREATING EVENT IN CALENDAR"); // add more information in error message
-		} else {
-			console.log("Event created!"); // add which event was created (console.log)
+			console.log('== PROBLEM CREATING ' + (course.symbol).concat(' - ', course.type));
 		}
 
 		if (callback && typeof callback === 'function')

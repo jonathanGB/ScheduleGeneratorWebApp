@@ -35,7 +35,6 @@ if "%formResults%"=="bad" (
 
 	echo.
 
-	:: debug this part, with the chain of redirects
 	echo == GRABBING CURRENT SEMESTER' SCHEDULE
 	echo ...
 	curl -s -b schedule_cookie.txt -L "https://uozone2.uottawa.ca/academic" > schedule.html
@@ -49,13 +48,16 @@ if "%formResults%"=="bad" (
 		echo == WRONG CREDENTIALS, OR COOKIE DIDN'T WORK.
 	) else (
 		echo == SCHEDULE SUCCESSFULLY GRABBED.
+		echo == PARSING SCHEDULE AND INSERTING INTO CALENDAR
 		echo.
+
+		node createSchedule.js
 	)
 )
 
 
 if exist formId.txt DEL formId.txt
-if exist cookies.txt DEL cookies.txt
+if exist schedule_cookie.txt DEL schedule_cookie.txt
 if exist formResults.txt DEL formResults.txt
 if exist scheduleResults.txt DEL scheduleResults.txt
 
