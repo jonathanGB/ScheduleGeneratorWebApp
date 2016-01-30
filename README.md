@@ -4,8 +4,6 @@ Automatically grabs your uOttawa schedule of the semester and populates your fav
 
 **Still in development, should eventually be working on Windows CMD and *nix systems.**
 
-**UPDATE: works in Windows CMD**
-
 ## How to Install
 
 ###What You Need
