@@ -120,8 +120,9 @@ function insertIntoCalendar(course, callback) {
 	    }
 	};
 
-
-	cronofy.createEvent(options, function (err, response) {
+	setTimeout(function() {
+		cronofy.createEvent(options, function (err, response) {
+			fs.append('results.json', JSON.stringify(options) + '\n');
 		if (err) {
 			console.log('== PROBLEM CREATING ' + (course.symbol).concat(' - ', course.type));
 		}
@@ -129,6 +130,7 @@ function insertIntoCalendar(course, callback) {
 		if (callback && typeof callback === 'function')
 			callback();
 	});
+	}, 100);
 }
 
 
