@@ -3,6 +3,7 @@ var request = require('request');
 //request.debug = true;
 const inquirer = require('inquirer');
 const fs = require('fs');
+const _ = require('underscore');
 
 const SCHOOL_NAME = "UOTTAWA";
 
@@ -24,7 +25,7 @@ function uOttawascheduleCrawler() {
 		jar: true
 	}, function(err, res, body) {
 		if (err) throw new Error(err);
-		
+
 		var formId = getFormId(body);
 
 		if (!formId)
@@ -33,11 +34,9 @@ function uOttawascheduleCrawler() {
 		console.log("== FORM ID GOTTEN\n");
 
 		askUozoneCredentials(function(creds) {
-			console.log();
-			
 		 	request({
 		 		method: 'post',
-		 		url: 'https://uozone2.uottawa.ca/user/login', 
+		 		url: 'https://uozone2.uottawa.ca/user/login',
 		 		qs: {
 		 			language: 'en'
 		 		},
@@ -51,15 +50,36 @@ function uOttawascheduleCrawler() {
 		 		}
 		 	}, function(err, res, body) {
 		 		if (err) throw new Error(err);
-		 		
+
 		 		verifyUozoneLogin(body, function() {
 		 			request({
-		 				url: 'https://uozone2.uottawa.ca/academic',
+		 				url: 'https://uozone2.uottawa.ca/academic?language=en',
 		 				jar: true
 		 			}, function(err ,res, body) {
 		 				if (err) throw new Error(err);
 
-						fs.writeFileSync('schedule.html', body, 'utf8');		 				
+						var $ = cheerio.load(body);
+						var semesters = getSemesters($);
+
+						inquirer.prompt([
+							{
+								type: 'checkbox',
+								name: 'semesters',
+								message: 'Select semesters to generate schedule',
+								choices: function() {
+									return Object.keys(semesters);
+								},
+								filter: function(answer) {
+									var filteredAnswers = {};
+
+									answer.forEach(function(semester) {
+										filteredAnswers[semester] = semesters[semester];
+									});
+
+									return filteredAnswers;
+								}
+							}
+						]).then(grabSchedules);
 		 			});
 		 		});
 		 	});
@@ -85,7 +105,7 @@ function uOttawascheduleCrawler() {
 				}
 			},
 			{
-				type: 'input',
+				type: 'password',
 				name: 'password',
 				message: 'uOzone password: '
 			}
@@ -95,7 +115,6 @@ function uOttawascheduleCrawler() {
 	}
 
 	function verifyUozoneLogin(body, callback) {
-		
 		var $ = cheerio.load(body);
 
 		if ($('body').hasClass('logged-in')) {
@@ -105,5 +124,30 @@ function uOttawascheduleCrawler() {
 		else
 			console.log('Bad uoZone credentials');
 	}
-}
 
+	function getSemesters($) {
+		var semesters = {};
+
+		$('#edit-session option').each(function() {
+			semesters[$(this).text().trim()] = $(this).val();
+		});
+
+		return semesters;
+	}
+
+	function grabSchedules(chosenSemesters) {
+		if (_.isEmpty(chosenSemesters.semesters))
+			return;
+
+		var curKey = Object.keys(chosenSemesters.semesters)[0];
+		var curId = chosenSemesters.semesters[curKey];
+		delete chosenSemesters.semesters[curKey];
+
+		console.log('Grabbing schedule of', curKey, curId);
+
+		// TODO: CHANGE TIMEOUT WITH ACTUAL SCHEDULE GRABBING/PARSING
+		setTimeout(function() {
+				grabSchedules(chosenSemesters);
+		}, 2000);
+	}
+}

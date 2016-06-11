@@ -27,7 +27,9 @@
     "google-auth-library": "^0.9.8",
     "googleapis": "^8.0.0",
     "inquirer": "^1.0.3",
-    "opener": "^1.4.1"
+    "opener": "^1.4.1",
+    "request": "^2.72.0",
+    "underscore": "^1.8.3"
   },
   "license": "MIT"
 }
