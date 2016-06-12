@@ -7,22 +7,21 @@ const _ = require('underscore');
 const chalk = require('chalk');
 
 
-printTitle();
+printTitle('UOTTAWA'); // change for different school
 
-uOttawascheduleCrawler();
+uOttawaScheduleCrawler();
 
 
 /* FUNCTIONS */
-function printTitle() {
-	const SCHOOL_NAME = "POLY"; // change school name
-	const TITLE = SCHOOL_NAME + ' CALENDAR GENERATOR';
+function printTitle(schoolName) {
+	const TITLE = schoolName + ' CALENDAR GENERATOR';
 	const BORDER = generateLine(TITLE.length, '*');
 	const PADDING = generateLine(TITLE.length, ' ');
 
 	console.log();
 	console.log(chalk.cyan(BORDER));
 	console.log(chalk.cyan(PADDING));
-	console.log(chalk.cyan('*'), chalk.white.bold(SCHOOL_NAME, 'CALENDAR GENERATOR'), chalk.cyan('*'));
+	console.log(chalk.cyan('*'), chalk.white.bold(schoolName, 'CALENDAR GENERATOR'), chalk.cyan('*'));
 	console.log(chalk.cyan(PADDING));
 	console.log(chalk.cyan(BORDER));
 	console.log();
@@ -37,7 +36,7 @@ function printTitle() {
 	}
 }
 
-function uOttawascheduleCrawler() {
+function uOttawaScheduleCrawler() {
 	console.log("GRABBING THE FORM ID");
 
 	request({
@@ -98,7 +97,7 @@ function uOttawascheduleCrawler() {
 
 									return filteredAnswers;
 								}
-							}
+							} // TODO: another prompt here, ask for colours depending of periodType
 						]).then(grabSchedules);
 		 			});
 		 		});
@@ -163,11 +162,51 @@ function uOttawascheduleCrawler() {
 		var curId = chosenSemesters.semesters[curKey];
 		delete chosenSemesters.semesters[curKey];
 
-		console.log('Grabbing schedule of', chalk.magenta(curKey));
+		console.log('\n\nGrabbing schedule of', chalk.magenta(curKey));
 
 		// TODO: CHANGE TIMEOUT WITH ACTUAL SCHEDULE GRABBING/PARSING
-		setTimeout(function() {
-				grabSchedules(chosenSemesters);
-		}, 2000);
+		request({
+			url: 'https://uozone2.uottawa.ca/academic',
+			qs: {
+				language: 'en',
+				session: curId
+			},
+			jar: true,
+		}, function(err, response, body) {
+			if (err) throw new Error(err);
+
+			var $ = cheerio.load(body);
+			fs.writeFileSync(curId + '.html', body, 'utf8');
+			parseSemesterSchedule($);
+			grabSchedules(chosenSemesters);
+		});
+	}
+
+	function parseSemesterSchedule($) {
+		$('div.view-content table').each(function() {
+	  	var caption = $(this).children('caption').text().trim();
+	  	var courseSymbol = caption.substr(0, 7);
+	  	var courseTitle = caption.slice(8, caption.lastIndexOf('(')).trim();
+	  	var semesterTime = caption.slice(caption.lastIndexOf('(') + 1, caption.lastIndexOf(')')).split(' ');
+	  	var semesterStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0]);
+	  	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3] + ' 23:59');
+
+			console.log('\n', chalk.cyan(courseSymbol, ':', courseTitle));
+
+			$(this).find('tbody tr').each(function() {
+		 		var $row = $(this);
+		 		var periodDay = $row.children('td').eq(1).text().trim();
+		 		var periodTime = $row.children('td').eq(2).text().trim().split(' ');
+		 		var periodStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[0]);
+		 		var periodEnd = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[2]);
+		 		var periodType = $row.children('td').eq(3).text().trim();
+		 		var periodLocation = $row.children('td').eq(4).text().trim();
+
+				console.log(chalk.green('--->', periodDay, periodTime.join(' '), periodType, periodLocation))
+
+				// TODO: create period object, add to array of periods
+				// TODO: confirm, then insert events in GCalendar
+			});
+		});
 	}
 }
