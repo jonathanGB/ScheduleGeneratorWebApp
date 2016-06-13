@@ -5,9 +5,12 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const _ = require('underscore');
 const chalk = require('chalk');
+const spawn = require('child_process').spawn;
 
 
 printTitle('UOTTAWA'); // change for different school
+
+var insertProcess = spawn('node', ['insertingEvent.js']); // child process to insert events asynchronously
 
 uOttawaScheduleCrawler();
 
@@ -80,6 +83,9 @@ function uOttawaScheduleCrawler() {
 						var $ = cheerio.load(body);
 						var semesters = getSemesters($);
 
+						var colours = defineEventColours();
+
+
 						inquirer.prompt([
 							{
 								type: 'checkbox',
@@ -97,7 +103,40 @@ function uOttawaScheduleCrawler() {
 
 									return filteredAnswers;
 								}
-							} // TODO: another prompt here, ask for colours depending of periodType
+							},
+							{
+								type: 'list',
+								name: 'lecColour',
+								message: 'Specific colour for Lectures:',
+								choices: function() {
+									return Object.keys(colours);
+								},
+								filter: function(val) {
+									return colours[val];
+								}
+							},
+							{
+								type: 'list',
+								name: 'dgdTutColour',
+								message: 'Specific colour for DGDs/Tutorials:',
+								choices: function() {
+									return Object.keys(colours);
+								},
+								filter: function(val) {
+									return colours[val];
+								}
+							},
+							{
+								type: 'list',
+								name: 'labColour',
+								message: 'Specific colour for Labs:',
+								choices: function() {
+									return Object.keys(colours);
+								},
+								filter: function(val) {
+									return colours[val];
+								}
+							}
 						]).then(grabSchedules);
 		 			});
 		 		});
@@ -157,7 +196,7 @@ function uOttawaScheduleCrawler() {
 	function grabSchedules(chosenSemesters) {
 		if (_.isEmpty(chosenSemesters.semesters))
 			return;
-
+		console.log(chosenSemesters);
 		var curKey = Object.keys(chosenSemesters.semesters)[0];
 		var curId = chosenSemesters.semesters[curKey];
 		delete chosenSemesters.semesters[curKey];
@@ -176,7 +215,7 @@ function uOttawaScheduleCrawler() {
 			if (err) throw new Error(err);
 
 			var $ = cheerio.load(body);
-			fs.writeFileSync(curId + '.html', body, 'utf8');
+
 			parseSemesterSchedule($);
 			grabSchedules(chosenSemesters);
 		});
@@ -188,7 +227,6 @@ function uOttawaScheduleCrawler() {
 	  	var courseSymbol = caption.substr(0, 7);
 	  	var courseTitle = caption.slice(8, caption.lastIndexOf('(')).trim();
 	  	var semesterTime = caption.slice(caption.lastIndexOf('(') + 1, caption.lastIndexOf(')')).split(' ');
-	  	var semesterStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0]);
 	  	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3] + ' 23:59');
 
 			console.log('\n', chalk.cyan(courseSymbol, ':', courseTitle));
@@ -205,8 +243,31 @@ function uOttawaScheduleCrawler() {
 				console.log(chalk.green('--->', periodDay, periodTime.join(' '), periodType, periodLocation))
 
 				// TODO: create period object, add to array of periods
-				// TODO: confirm, then insert events in GCalendar
+				var periodObj = {
+					location: periodLocation,
+					summary: courseSymbol + ' - ' + periodType,
+					// finish object
+				};
+				// TODO: insert events in GCalendar by insertProcess.stdin.write(JSON.stringify(periodObj));
+				// TODO: add insertProcess.stdout.on('data', function(data) {}) to listen back
 			});
 		});
+	}
+
+	function defineEventColours() {
+		var colours = {};
+		colours['Soft Blue'] = 1;
+		colours['Mint Green'] = 2;
+		colours['Pale Violet'] = 3;
+		colours['Light Red'] = 4;
+		colours['Golden Yellow'] = 5;
+		colours['Light Orange'] = 6;
+		colours['Soft Cyan'] = 7;
+		colours['Light Gray'] = 8;
+		colours['Blue Pastel'] = 9;
+		colours['Lime Green'] = 10;
+		colours['Vivid Red'] = 11;
+
+		return colours;
 	}
 }
