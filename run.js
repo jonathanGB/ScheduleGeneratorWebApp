@@ -10,7 +10,7 @@ const spawn = require('child_process').spawn;
 
 printTitle('UOTTAWA'); // change for different school
 
-var insertProcess = spawn('node', ['insertingEvent.js']); // child process to insert events asynchronously
+var insertProcess = spawn('node', ['eventsToGCalendar.js']); // child process to insert events asynchronously
 
 uOttawaScheduleCrawler();
 
