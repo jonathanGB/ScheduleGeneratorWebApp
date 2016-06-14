@@ -53,7 +53,7 @@ function uOttawaScheduleCrawler() {
 		if (!formId)
 			throw new Error('Form id not found');
 
-		console.log("FORM ID GOTTEN\n");
+		console.log("FORM ID RETRIEVED\n");
 
 		askUozoneCredentials(function(creds) {
 		 	request({
@@ -203,7 +203,6 @@ function uOttawaScheduleCrawler() {
 
 		console.log('\n\nGrabbing schedule of', chalk.magenta(curKey));
 
-		// TODO: CHANGE TIMEOUT WITH ACTUAL SCHEDULE GRABBING/PARSING
 		request({
 			url: 'https://uozone2.uottawa.ca/academic',
 			qs: {
@@ -216,40 +215,66 @@ function uOttawaScheduleCrawler() {
 
 			var $ = cheerio.load(body);
 
-			parseSemesterSchedule($);
-			grabSchedules(chosenSemesters);
+			parseSemesterSchedule($, chosenSemesters);
+			grabSchedules(chosenSemesters); // TODO: put as callback to parseSemesterSchedule
 		});
 	}
 
-	function parseSemesterSchedule($) {
+	function parseSemesterSchedule($, chosenSemesters) {
+		var dayValue = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; // diff from start
+
 		$('div.view-content table').each(function() {
 	  	var caption = $(this).children('caption').text().trim();
 	  	var courseSymbol = caption.substr(0, 7);
 	  	var courseTitle = caption.slice(8, caption.lastIndexOf('(')).trim();
 	  	var semesterTime = caption.slice(caption.lastIndexOf('(') + 1, caption.lastIndexOf(')')).split(' ');
-	  	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3] + ' 23:59');
+			var semesterStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0]);
+		 	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3]);
+			semesterEnd.setDate(semesterEnd.getDate() + 1); // so UNTIL clause works for the last day of semester
 
 			console.log('\n', chalk.cyan(courseSymbol, ':', courseTitle));
 
 			$(this).find('tbody tr').each(function() {
 		 		var $row = $(this);
-		 		var periodDay = $row.children('td').eq(1).text().trim();
+		 		var periodDay = $row.children('td').eq(1).text().trim().toLowerCase()	;
 		 		var periodTime = $row.children('td').eq(2).text().trim().split(' ');
-		 		var periodStart = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[0]);
-		 		var periodEnd = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[2]);
+				var diffFromStart = dayValue.indexOf(periodDay) - semesterStart.getDay(); // difference from semesterStart date object
+		 		var periodStart = periodTime[0];
+		 		var periodEnd = periodTime[2];
+				var periodStartDateObj = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[0]);
+		 		periodStartDateObj.setDate(periodStartDateObj.getDate() + diffFromStart);
+		 		var periodEndDateObj = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[2]);
+		 		periodEndDateObj.setDate(periodEndDateObj.getDate() + diffFromStart);
 		 		var periodType = $row.children('td').eq(3).text().trim();
 		 		var periodLocation = $row.children('td').eq(4).text().trim();
 
 				console.log(chalk.green('--->', periodDay, periodTime.join(' '), periodType, periodLocation))
 
-				// TODO: create period object, add to array of periods
 				var periodObj = {
 					location: periodLocation,
 					summary: courseSymbol + ' - ' + periodType,
-					// finish object
+					start: {
+						dateTime: periodStartDateObj.toISOString().slice(0, -1),
+						timeZone: 'America/Montreal'
+					},
+					end: {
+						dateTime: periodEndDateObj.toISOString().slice(0, -1),
+						timeZone: 'America/Montreal'
+					},
+					recurrence: [
+						`RRULE:FREQ=WEEKLY;UNTIL=${semesterEnd.toISOString().slice(0, semesterEnd.toISOString().indexOf('T')).replace(/-/g, '')}` // format is YYYYMMDD
+					],
+					reminders: {
+						useDefault: false,
+						overrides: []
+					},
+					colorId: getColourId(periodType.toLowerCase(), chosenSemesters)
 				};
+
+				console.log(periodObj);
 				// TODO: insert events in GCalendar by insertProcess.stdin.write(JSON.stringify(periodObj));
 				// TODO: add insertProcess.stdout.on('data', function(data) {}) to listen back
+				// TODO: modify child process to insert data to GCalendar
 			});
 		});
 	}
@@ -264,10 +289,39 @@ function uOttawaScheduleCrawler() {
 		colours['Light Orange'] = 6;
 		colours['Soft Cyan'] = 7;
 		colours['Light Gray'] = 8;
-		colours['Blue Pastel'] = 9;
+		colours['Powder Blue'] = 9;
 		colours['Lime Green'] = 10;
 		colours['Vivid Red'] = 11;
 
 		return colours;
+	}
+
+// TODO: remove this function?
+	function getMonthInt(monthStr) {
+		var months = {
+			'january': '01',
+			'february': '02',
+			'march': '03',
+			'april': '04',
+			'may': '05',
+			'june': '06',
+			'july': '07',
+			'august': '08',
+			'september': '09',
+			'october': '10',
+			'november': '11',
+			'december': '12'
+		};
+
+		return months[monthStr.toLowerCase()];
+	}
+
+	function getColourId(type, chosenSemesters) {
+		if (type.includes('lecture'))
+			return chosenSemesters.lecColour;
+		if (type.includes('lab'))
+			return chosenSemesters.labColour;
+
+		return chosenSemesters.dgdTutColour;
 	}
 }
