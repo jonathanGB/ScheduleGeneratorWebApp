@@ -1,8 +1,8 @@
 # uOttawa Calendar Generator
 
-### Automatically grabs your uOttawa schedule of your current and/or following semesters and populates your google calendar with your courses.
+### Automatically grabs your uOttawa schedule of your current and/or following semesters and populates your google calendar with your courses. Plus, lets you choose specific colours for lectures, DGDs/tutorials and Labs!
 
-#### Works on all platforms!
+#### Works on all platforms (Windows, Mac, Linux)!
 
 ### Steps
 1. Install [node.js](https://nodejs.org/) - at least v4.4.4
