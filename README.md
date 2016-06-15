@@ -11,4 +11,4 @@
 3. When that's done, open your `cmd` or `terminal` and go to the root of the directory where you installed the project
   * See [this](http://www.digitalcitizen.life/command-prompt-how-use-basic-commands) if you don't know how to change directories in the command-line
 4. Run `npm install` - this install all the dependencies of the project.
-5. Run `node run` - this starts the app. Follow the steps, and your calendar should now be generated automatically!
+5. Run `node run` - this starts the app. Follow the steps, and your calendar should now be generated automatically :)
