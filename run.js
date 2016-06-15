@@ -3,14 +3,14 @@ var request = require('request');
 //request.debug = true;
 const inquirer = require('inquirer');
 const fs = require('fs');
-const _ = require('underscore');
+const _ = require('lodash');
 const chalk = require('chalk');
 const spawn = require('child_process').spawn;
 
 
 printTitle('UOTTAWA'); // change for different school
 
-var insertProcess = spawn('node', ['eventsToGCalendar.js']); // child process to insert events asynchronously
+//var insertProcess = spawn('node', ['eventsToGCalendar.js']); // child process to insert events asynchronously
 
 uOttawaScheduleCrawler();
 
@@ -102,6 +102,11 @@ function uOttawaScheduleCrawler() {
 									});
 
 									return filteredAnswers;
+								},
+								validate: function(answer) {
+									return _.isEmpty(answer) ?
+											"You must choose at least one semester!":
+											true;
 								}
 							},
 							{
@@ -167,9 +172,7 @@ function uOttawaScheduleCrawler() {
 				name: 'password',
 				message: 'uOzone password: '
 			}
-		]).then(function (answers) {
-			callback(answers);
-		});
+		]).then(callback);
 	}
 
 	function verifyUozoneLogin(body, callback) {
@@ -196,7 +199,7 @@ function uOttawaScheduleCrawler() {
 	function grabSchedules(chosenSemesters) {
 		if (_.isEmpty(chosenSemesters.semesters))
 			return;
-		console.log(chosenSemesters);
+		//console.log(chosenSemesters)
 		var curKey = Object.keys(chosenSemesters.semesters)[0];
 		var curId = chosenSemesters.semesters[curKey];
 		delete chosenSemesters.semesters[curKey];
@@ -223,7 +226,7 @@ function uOttawaScheduleCrawler() {
 	function parseSemesterSchedule($, chosenSemesters) {
 		var dayValue = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; // diff from start
 
-		$('div.view-content table').each(function() {
+		$('.panel-col-main div.view-content table').each(function() {
 	  	var caption = $(this).children('caption').text().trim();
 	  	var courseSymbol = caption.substr(0, 7);
 	  	var courseTitle = caption.slice(8, caption.lastIndexOf('(')).trim();
@@ -238,7 +241,7 @@ function uOttawaScheduleCrawler() {
 		 		var $row = $(this);
 		 		var periodDay = $row.children('td').eq(1).text().trim().toLowerCase()	;
 		 		var periodTime = $row.children('td').eq(2).text().trim().split(' ');
-				var diffFromStart = dayValue.indexOf(periodDay) - semesterStart.getDay(); // difference from semesterStart date object
+				var diffFromStart = (dayValue.indexOf(periodDay) - semesterStart.getDay()).mod(7); // difference from semesterStart date object, with modulo of 7 to wrap around the week
 		 		var periodStart = periodTime[0];
 		 		var periodEnd = periodTime[2];
 				var periodStartDateObj = new Date(semesterTime[5] + ' ' + semesterTime[1] + ' ' + semesterTime[0] + ' ' + periodTime[0]);
@@ -254,11 +257,11 @@ function uOttawaScheduleCrawler() {
 					location: periodLocation,
 					summary: courseSymbol + ' - ' + periodType,
 					start: {
-						dateTime: periodStartDateObj.toISOString().slice(0, -1),
+						dateTime: periodStartDateObj.toISOString(),
 						timeZone: 'America/Montreal'
 					},
 					end: {
-						dateTime: periodEndDateObj.toISOString().slice(0, -1),
+						dateTime: periodEndDateObj.toISOString(),
 						timeZone: 'America/Montreal'
 					},
 					recurrence: [
@@ -324,4 +327,8 @@ function uOttawaScheduleCrawler() {
 
 		return chosenSemesters.dgdTutColour;
 	}
+
+	Number.prototype.mod = function(n) {
+		return ((this%n)+n)%n;
+	};
 }

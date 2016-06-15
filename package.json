@@ -4,6 +4,7 @@
   "keywords": [
     "uOttawa",
     "automatic",
+    "parser",
     "calendar",
     "API",
     "google calendar",
@@ -28,9 +29,9 @@
     "google-auth-library": "^0.9.8",
     "googleapis": "^8.0.0",
     "inquirer": "^1.0.3",
+    "lodash": "^4.13.1",
     "opener": "^1.4.1",
-    "request": "^2.72.0",
-    "underscore": "^1.8.3"
+    "request": "^2.72.0"
   },
   "license": "MIT"
 }
