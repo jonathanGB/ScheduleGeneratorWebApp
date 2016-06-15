@@ -1,18 +1,16 @@
 const cheerio = require('cheerio');
-var request = require('request');
+const request = require('request');
 //request.debug = true;
 const inquirer = require('inquirer');
 const fs = require('fs');
 const _ = require('lodash');
 const chalk = require('chalk');
-const spawn = require('child_process').spawn;
+const _gCalendar = require('./eventsToGCalendar');
 
 
 printTitle('UOTTAWA'); // change for different school
 
-//var insertProcess = spawn('node', ['eventsToGCalendar.js']); // child process to insert events asynchronously
-
-uOttawaScheduleCrawler();
+_gCalendar.start(uOttawaScheduleCrawler);
 
 
 /* FUNCTIONS */
@@ -39,7 +37,7 @@ function printTitle(schoolName) {
 	}
 }
 
-function uOttawaScheduleCrawler() {
+function uOttawaScheduleCrawler(gAuth) {
 	console.log("GRABBING THE FORM ID");
 
 	request({
@@ -103,7 +101,7 @@ function uOttawaScheduleCrawler() {
 
 									return filteredAnswers;
 								},
-								validate: function(answer) {
+								validate: function(answer) { // for you Ryan...
 									return _.isEmpty(answer) ?
 											"You must choose at least one semester!":
 											true;
@@ -219,14 +217,17 @@ function uOttawaScheduleCrawler() {
 			var $ = cheerio.load(body);
 
 			parseSemesterSchedule($, chosenSemesters);
-			grabSchedules(chosenSemesters); // TODO: put as callback to parseSemesterSchedule
+
+			setTimeout(function() {
+				grabSchedules(chosenSemesters);
+			}, 1000);
 		});
 	}
 
 	function parseSemesterSchedule($, chosenSemesters) {
 		var dayValue = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; // diff from start
 
-		$('.panel-col-main div.view-content table').each(function() {
+		$('.panel-col-main div.view-content table').each(function(i) {
 	  	var caption = $(this).children('caption').text().trim();
 	  	var courseSymbol = caption.substr(0, 7);
 	  	var courseTitle = caption.slice(8, caption.lastIndexOf('(')).trim();
@@ -235,9 +236,9 @@ function uOttawaScheduleCrawler() {
 		 	var semesterEnd = new Date(semesterTime[5] + ' ' +  semesterTime[4] + ' ' + semesterTime[3]);
 			semesterEnd.setDate(semesterEnd.getDate() + 1); // so UNTIL clause works for the last day of semester
 
-			console.log('\n', chalk.cyan(courseSymbol, ':', courseTitle));
+			console.log('\n\n\n', chalk.cyan(courseSymbol, ':', courseTitle));
 
-			$(this).find('tbody tr').each(function() {
+			$(this).find('tbody tr').each(function(j) {
 		 		var $row = $(this);
 		 		var periodDay = $row.children('td').eq(1).text().trim().toLowerCase()	;
 		 		var periodTime = $row.children('td').eq(2).text().trim().split(' ');
@@ -251,7 +252,8 @@ function uOttawaScheduleCrawler() {
 		 		var periodType = $row.children('td').eq(3).text().trim();
 		 		var periodLocation = $row.children('td').eq(4).text().trim();
 
-				console.log(chalk.green('--->', periodDay, periodTime.join(' '), periodType, periodLocation))
+				var eventDescription = 	`${periodDay} ${periodTime.join(' ')} ${periodType} ${periodLocation}`;
+				console.log(chalk.yellow('---> Inserting', eventDescription));
 
 				var periodObj = {
 					location: periodLocation,
@@ -274,10 +276,8 @@ function uOttawaScheduleCrawler() {
 					colorId: getColourId(periodType.toLowerCase(), chosenSemesters)
 				};
 
-				console.log(periodObj);
-				// TODO: insert events in GCalendar by insertProcess.stdin.write(JSON.stringify(periodObj));
-				// TODO: add insertProcess.stdout.on('data', function(data) {}) to listen back
-				// TODO: modify child process to insert data to GCalendar
+				_gCalendar.insertEvent(gAuth, periodObj, eventDescription);
+
 			});
 		});
 	}
