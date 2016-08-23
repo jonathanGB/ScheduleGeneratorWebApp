@@ -237,6 +237,7 @@ function uOttawaScheduleCrawler(gAuth) {
 				console.log(chalk.yellow('---> Inserting', eventDescription));
 
 				var periodObj = {
+					description: courseTitle,
 					location: periodLocation,
 					summary: courseSymbol + ' - ' + periodType,
 					start: {
@@ -258,7 +259,6 @@ function uOttawaScheduleCrawler(gAuth) {
 				};
 
 				_gCalendar.insertEvent(gAuth, periodObj, eventDescription);
-
 			});
 		});
 	}
