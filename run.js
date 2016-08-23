@@ -38,51 +38,42 @@ function printTitle(schoolName) {
 }
 
 function uOttawaScheduleCrawler(gAuth) {
-	console.log("GRABBING THE FORM ID");
+	askUozoneCredentials((creds) => {
+		console.log(chalk.blue('\nGenerating a login token!\n'));
 
-	request({
-		url: 'https://uozone2.uottawa.ca/user/login',
-		jar: true
-	}, function(err, res, body) {
-		if (err) throw new Error(err);
+		request({
+			method: 'post',
+			url: 'https://uozone2.uottawa.ca/pkmslogin.form?token=Unknown',
+			qs: {
+				language: 'en'
+			},
+			jar: true,
+			form: {
+				username: creds.username,
+				password: creds.password,
+				"login-form-type": 'pwd'
+			}
+		}, (err, res, body) => {
+			if (err) throw new Error(err);
 
-		var formId = getFormId(body);
+			console.log(chalk.blue('Token generated... testing if it is valid'));
 
-		if (!formId)
-			throw new Error('Form id not found');
+			request({
+				url: 'https://uozone2.uottawa.ca/',
+				jar: true
+			}, (err, res, body) => {
+				if (err) throw new Error(err);
 
-		console.log("FORM ID RETRIEVED\n");
-
-		askUozoneCredentials(function(creds) {
-		 	request({
-		 		method: 'post',
-		 		url: 'https://uozone2.uottawa.ca/user/login',
-		 		qs: {
-		 			language: 'en'
-		 		},
-		 		jar: true,
-		 		form: {
-		 			name: creds.username,
-		 			pass: creds.password,
-		 			form_build_id: formId,
-		 			form_id: 'user_login_block',
-		 			op: 'Login'
-		 		}
-		 	}, function(err, res, body) {
-		 		if (err) throw new Error(err);
-
-		 		verifyUozoneLogin(body, function() {
+		 		verifyUozoneLogin(body, () => {
 		 			request({
 		 				url: 'https://uozone2.uottawa.ca/academic?language=en',
 		 				jar: true
-		 			}, function(err ,res, body) {
+		 			}, (err ,res, body) => {
 		 				if (err) throw new Error(err);
 
 						var $ = cheerio.load(body);
 						var semesters = getSemesters($);
-
 						var colours = defineEventColours();
-
 
 						inquirer.prompt([
 							{
@@ -148,27 +139,17 @@ function uOttawaScheduleCrawler(gAuth) {
 	});
 
 
-	function getFormId(landingPage) {
-		var $ = cheerio.load(landingPage);
-		return $('[name=form_build_id]').val();
-	}
-
 	function askUozoneCredentials(callback) {
 		inquirer.prompt([
 			{
 				type: 'input',
 				name: 'username',
-				message: 'uOzone username: ',
-				validate: function(input) {
-					return isNaN(input) ?
-						'username given is not a number':
-						true;
-				}
+				message: 'uOzone username (left part of your uottawa email address):'
 			},
 			{
 				type: 'password',
 				name: 'password',
-				message: 'uOzone password: '
+				message: 'uOzone password:'
 			}
 		]).then(callback);
 	}
@@ -218,7 +199,7 @@ function uOttawaScheduleCrawler(gAuth) {
 
 			parseSemesterSchedule($, chosenSemesters);
 
-			setTimeout(function() {
+			setTimeout(() => {
 				grabSchedules(chosenSemesters);
 			}, 1000);
 		});
@@ -332,3 +313,15 @@ function uOttawaScheduleCrawler(gAuth) {
 		return ((this%n)+n)%n;
 	};
 }
+
+process.on('exit', (code) => {
+	const PEACE_OUT = `______                                 _     _
+| ___ \\                               | |   | |
+| |_/ /__  __ _  ___ ___    ___  _   _| |_  | |
+|  __/ _ \\/ _\` |/ __/ _ \\  / _ \\| | | | __| | |
+| | |  __/ (_| | (_|  __/ | (_) | |_| | |_  |_|
+\\_|  \\___|\\__,_|\\___\\___|  \\___/ \\__,_|\\__| (_)`
+  console.log(chalk.white('\n\nExiting!'));
+
+	console.log(chalk.yellow(PEACE_OUT))
+});
