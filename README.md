@@ -1,14 +1,25 @@
-# uOttawa Calendar Generator
+Welcome to the HyperDev BETA
+============================
 
-### Automatically grabs your uOttawa schedule of your current and/or following semesters and populates your google calendar with your courses. Plus, lets you choose specific colours for lectures, DGDs/tutorials and Labs!
+Click `"Show"` in the header to see your app live. Updates to your code will instantly deploy and update live.
 
-#### Works on all platforms (Windows, Mac, Linux)!
+HyperDev is a developer playground that lets you code a real web-app without the slow setup and deployment steps. 
 
-### Steps
-1. Install [node.js](https://nodejs.org/) - at least v4.4.4
-  * This runs the CLI app, does the scraping and multiple requests to APIs
-2.  Use `git` to download the repository or download it as a zip file and decompress it. **Don't move the files relative to each other!**
-3. When that's done, open your `cmd` or `terminal` and go to the root of the project. E.g. if you installed it at `C:/Downloads/Project`, that is the root of the project.
-  * See [this](http://www.digitalcitizen.life/command-prompt-how-use-basic-commands) if you don't know how to change directories in the command-line
-4. Run `npm install` - this installs all the dependencies of the project.
-5. Run `node run` - this starts the app. Follow the steps, and your calendar should now be generated automatically :)
+
+Your Project
+------------
+
+On the back-end,
+- your app starts at `server.js`
+- add frameworks and packages in `package.json`
+- safely store app secrets in `.env`
+
+On the front-end,
+- edit `client.js`, `style.css` and `index.html`
+- drag in `assets`, like images or music, to add them to your project
+
+
+Made by Fog Creek
+-----------------
+
+\ ゜o゜)ノ
