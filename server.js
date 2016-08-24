@@ -7,6 +7,8 @@ var app = express();
 app.use(CookieParser());
 app.use(express.static('public'));
 
+const ALLOWED_SCHOOLS = ['uottawa'];
+
 
 // routes
 app.get("/", function (req, res) {
@@ -24,10 +26,10 @@ app.get("/run", (req, res) => {
   var code = req.query.code;
   var school = req.query.state;
   
-  if (!code || code === 'access_denied' || !school)
+  if (!code || code === 'access_denied' || !school || ALLOWED_SCHOOLS.indexOf(school) === -1)
     res.redirect('/');
   else
-    res.send(`topkek`);
+    res.sendFile(`${__dirname}/views/${school}.html`);
 })
 
 

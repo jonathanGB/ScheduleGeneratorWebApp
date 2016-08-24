@@ -2,11 +2,14 @@ body {
   font-family: helvetica, arial, sans-serif;
   margin: 25px;
   background-color: #f5faff;
+  margin-top: 10px;
+  text-align: center;
 }
 
 h1 {
   font-weight: bold;
   color: pink;
+  margin: 5px 0 60px 0;
 }
 
 .bold {
