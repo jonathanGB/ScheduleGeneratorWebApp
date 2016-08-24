@@ -1,16 +1,7 @@
-/* styles */
-/* called by your view template */
-
-/* You might want to try something fancier: */
-/* less: http://lesscss.org/ */
-
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: helvetica, arial, sans-serif;
   margin: 25px;
+  background-color: #f5faff;
 }
 
 h1 {
@@ -22,61 +13,35 @@ h1 {
   font-weight: bold;
 }
 
-p {
-  max-width: 600px;
-}
-
-form {
-  margin-bottom: 25px;
-  padding: 15px;
-  background-color: cyan;
-  display: inline-block;
-  width: 100%;
-  max-width: 340px;
-  border-radius: 3px;
-}
-
-input {
-  display: block;
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-  border: 1px solid lightgrey;
-  border-radius: 3px;
-  font-size: 16px;
-}
-
-button {
+.hyp-btn {
   font-size: 16px;
   border-radius: 3px;
-  background-color: lightgrey;
+  background-color: #e5fff0;
   border: 1px solid grey;
   box-shadow: 2px 2px teal;
   cursor: pointer;
+  padding: 5px;
 }
 
-button:hover {
+.hyp-btn:hover {
   background-color: yellow;
 }
 
-button:active {
+.hyp-btn:active {
   box-shadow: none;
-}
-
-li {
-  margin-bottom: 5px;
 }
 
 footer {
   margin-top: 50px;
-  padding-top: 25px;
+  padding-top: 5px;
   border-top: 1px solid lightgrey;
 }
 
-footer > a {
-  color: #BBBBBB;
+a {
+  color: #4394af;
+  text-decoration: none;
 }
 
-.nicejob {
-  text-decoration: line-through;
+section {
+  margin-top: 15px;
 }

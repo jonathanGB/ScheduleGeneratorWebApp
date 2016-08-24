@@ -1,17 +1,8 @@
-<!-- This is a static file -->
-<!-- served from your routes in server.js -->
-
-<!-- You might want to try something fancier: -->
-<!-- html/nunjucks docs: http://mozilla.github.io/nunjucks/ -->
-<!-- jade: http://jade-lang.com/ -->
-<!-- haml: http://haml.info/tutorial.html -->
-<!-- hbs(handlebars): http://handlebarsjs.com/expressions.html -->
-
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Welcome to HyperDev!</title>
-    <meta name="description" content="A cool thing made with HyperDev">
+    <title>Schedule Generator WebApp</title>
+    <meta name="description" content="School Schedule Parser and Generator for Google Calendar">
     <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,27 +12,19 @@
   <body>
     <header>
       <h1>
-        A Dream of the Future
+        Schedule Generator
       </h1>
     </header>
-
+  
     <main>
-      <p class="bold">Oh hi,</p>
-      <p>Tell me your hopes and dreams:</p>
-      <form>
-        <input type="text" maxlength="100" placeholder="Dreams!">
-        <button type="submit">Submit</button>
-      </form>
-      <section class="dreams">
-        <ul id="dreams">
-        </ul>
+      <h3>Choose your school</h3>
+      <section>
+        <a href="/getToken/uottawa" class="hyp-btn">uOttawa</a>
       </section>
     </main>
 
     <footer>
-      <a href="https://hyperdev.com">
-        Remix this in HyperDev
-      </a>
+      Built by <a href="http://jonathanGB.com">Jonathan Guillotte-Blouin</a>
     </footer>
 
     <!-- Your web-app is https, so your scripts need to be too -->
