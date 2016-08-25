@@ -31,7 +31,7 @@ $(function() {
           signalError(currIndex);
       })
     } else if (currIndex === 1) {
-        
+
     } else {
       
     }
