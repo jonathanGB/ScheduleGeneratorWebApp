@@ -7,7 +7,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/jquery-steps.css">
   </head>
   <body>
     <header>
@@ -18,18 +20,50 @@
     </header>
   
     <main>
-      gotta do it, gotta do it fast
+      <div id="wizard">
+        <h3>Credentials</h3>
+        <section class="form-group">
+          <div class="form">
+            <label for="uozoneUsername">uoZone username (left part of email)</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="uozoneUsername" placeholder="abcd123">
+              <div class="input-group-addon">@uottawa.ca</div>
+            </div>
+          </div>
+          <div class="form">
+            <label for="uozonePassword">uoZone password</label>
+            <input type="password" class="form-control" id="uozonePassword">
+          </div>
+          <div class="submit">
+            <button class="btn btn-lg btn-primary" role="submit" data-index="0">Next <span class="glyphicon glyphicon-send"></span></button>
+          </div>
+        </section>
+        
+        <h3>Semesters</h3>
+        <section>
+          deuxieme
+          <div class="submit">
+            <button class="btn btn-lg btn-primary" role="submit" data-index="1">Next</button>
+          </div>
+        </section>
+        
+        <h3>Colours</h3>
+        <section>
+          dernier
+          <div class="submit">
+            <button class="btn btn-lg btn-primary" role="submit" data-index="2">Generate!</button>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer>
       Built by <a href="http://jonathanGB.com">Jonathan Guillotte-Blouin</a>
     </footer>
 
-    <!-- Your web-app is https, so your scripts need to be too -->
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js"
-            integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
-            crossorigin="anonymous"></script>
-    <script src="/client.js"></script>
-
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script src="/lib/jquery-steps.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="/uottawa.js"></script>
   </body>
 </html>

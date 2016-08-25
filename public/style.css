@@ -4,6 +4,7 @@ body {
   background-color: #f5faff;
   margin-top: 10px;
   text-align: center;
+  font-size: 12px !important;
 }
 
 h1 {
@@ -47,4 +48,41 @@ a {
 
 section {
   margin-top: 15px;
+}
+
+#wizard {
+  display: none;
+}
+
+.wizard > .actions > ul {
+  font-size: 18px;
+}
+
+div.content {
+  font-size: 14px;
+  text-align: left !important;
+}
+
+div.form {
+  margin-top: 15px;
+}
+
+div.submit {
+  margin-top: 30px;
+}
+
+.input-group-addon:hover {
+  cursor: default;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 340px) {
+  .wizard > .steps > ul > li {
+    width: auto !important;
+  }
 }

@@ -38,3 +38,12 @@ app.get("/run", (req, res) => {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+var io = require('socket.io')(listener);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  io.sockets.emit('salut', {top: 'kek'})
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
