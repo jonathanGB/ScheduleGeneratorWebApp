@@ -13,6 +13,10 @@ h1 {
   margin: 5px 0 60px 0;
 }
 
+h4 {
+  font-size: 17px;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -39,6 +43,12 @@ footer {
   margin-top: 50px;
   padding-top: 5px;
   border-top: 1px solid lightgrey;
+  font-size: 20px;
+  font-family: cursive, auto;
+}
+
+footer a {
+  text-decoration: none;
 }
 
 a {
@@ -87,10 +97,33 @@ div.submit {
 }
 
 #loader img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+
+.pre-loader {
+  background: url(https://cdn.hyperdev.com/us-east-1%3A3f3653fe-5bbe-4236-97c8-3748b536e20c%2Fellipsis.gif) center no-repeat, rgba(0,0,0,0.75) !important;
+}
+
+#wizard div.content {
+  -webkit-transition: background-color 1000ms linear;
+  -moz-transition: background-color 1000ms linear;
+  -o-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+}
+
+.all-centered {
   position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+#semesters {
+  margin-bottom: 25px;
 }
 
 
@@ -103,5 +136,9 @@ div.submit {
 @media screen and (max-width: 340px) {
   .wizard > .steps > ul > li {
     width: auto !important;
+  }
+  
+  .wizard > .steps > ul > li > a {
+    margin: 0 5px;
   }
 }

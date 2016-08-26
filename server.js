@@ -39,13 +39,25 @@ app.get("/run", (req, res) => {
 var listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+/* Websockets handling */
 var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  var jar = request.jar();
+  var jar;
   
-  socket.on('verify credentials', (data, callback) => {
-    ScheduleGenerator.verifyCredentials(data, jar, callback)
+  socket.on('verify credentials', (data, clientCallback) => {
+    jar = request.jar();
+    
+    ScheduleGenerator.verifyCredentials(data, jar, clientCallback, () => {
+      // this callback will only be called if credentials are valid
+      // this fetches the semesters to choose from
+      ScheduleGenerator.grabSemesters(jar, (semesters) => {
+        socket.emit('grab semesters', semesters);
+      })
+    })
   });
+  
+  
 });

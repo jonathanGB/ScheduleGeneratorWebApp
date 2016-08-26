@@ -30,6 +30,9 @@ $(function() {
         if (ok) {
           wizard.steps('next');
           toastr.success('', 'Good credentials!')
+          $('#wizard .content').addClass('pre-loader')
+          $('#wizard .content > section').eq(1).hide()
+          toastr.info('', 'Grabbing semesters...', {timeOut: 0})
         } else {
           signalError(currIndex, 'Bad credentials...');
         }
@@ -41,6 +44,26 @@ $(function() {
     }
   })
   
+  socket.on('grab semesters', function(data) {
+    $('#wizard .content').removeClass('pre-loader');
+    $('#wizard .content > section').eq(1).show();
+    setTimeout(toastr.clear, 2000);
+    
+    if (!data)
+      return toastr.error('', 'No semesters found...', {timeOut: 0})
+      
+    Object.keys(data).forEach(function(semester) {
+      var semesterHTML = '<div class="checkbox">' +
+                          '<label>' +
+                            '<input type="checkbox" value="' + data[semester] + '">' + semester +
+                          '</label>' +
+                         '</div>';
+      
+      $('#semesters').append(semesterHTML);
+    })
+    console.log(data);
+  })
+  
   
   
   /* functions */
@@ -48,9 +71,9 @@ $(function() {
     $('#loader').fadeIn(300);
     
     // change with real method
-    socket.emit('verify credentials', {username, password}, function(response) {
+    socket.emit('verify credentials', {username, password}, function(status) {
       $('#loader').fadeOut(300);
-      callback(response.status);
+      callback(status);
     })
   }
   
