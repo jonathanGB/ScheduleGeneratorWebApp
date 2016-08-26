@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/jquery-steps.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   </head>
   <body>
     <header>
@@ -18,7 +19,9 @@
         Schedule Generator - uOttawa
       </h1>
     </header>
-  
+    <div id="loader">
+      <img src="https://cdn.hyperdev.com/us-east-1%3A3f3653fe-5bbe-4236-97c8-3748b536e20c%2Fwave.gif" alt="">
+    </div>
     <main>
       <div id="wizard">
         <h3>Credentials</h3>
@@ -64,6 +67,7 @@
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="/lib/jquery-steps.min.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="/uottawa.js"></script>
   </body>
 </html>

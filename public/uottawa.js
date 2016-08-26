@@ -8,6 +8,7 @@ $(function() {
     transitionEffect: "slideLeft",
     enablePagination: false,
     autoFocus: true,
+    forceMoveForward: true,
     onInit: function() {
       wizard.fadeIn('slow')
     }
@@ -21,14 +22,17 @@ $(function() {
       var password = $('#uozonePassword').val();
         
       if (!username || !password) {
-        signalError(currIndex);
+        signalError(currIndex, 'At least one field is incomplete...');
         return false;
       }
           
       verifyCredentials(username, password, function(ok) {
-        ok ?
-          wizard.steps('next'):
-          signalError(currIndex);
+        if (ok) {
+          wizard.steps('next');
+          toastr.success('', 'Good credentials!')
+        } else {
+          signalError(currIndex, 'Bad credentials...');
+        }
       })
     } else if (currIndex === 1) {
 
@@ -41,11 +45,37 @@ $(function() {
   
   /* functions */
   function verifyCredentials(username, password, callback) {
+    $('#loader').fadeIn(300);
+    
     // change with real method
-    setTimeout(function() {callback(true)}, 4000)
+    socket.emit('verify credentials', {username, password}, function(response) {
+      $('#loader').fadeOut(300);
+      callback(response.status);
+    })
   }
   
-  function signalError(ind) {
+  function signalError(ind, errMessage) {
     wizard.find(".steps li").eq(ind).addClass("error");
+    toastr.error('', errMessage)
+  }
+  
+  
+  /* options */
+  toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "2000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
   }
 });

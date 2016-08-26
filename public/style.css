@@ -75,6 +75,25 @@ div.submit {
   cursor: default;
 }
 
+#loader {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 3;
+}
+
+#loader img {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
 @media screen and (max-width: 768px) {
   body {
     margin: 0;

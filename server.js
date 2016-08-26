@@ -2,6 +2,7 @@
 const express = require('express');
 const CookieParser = require('cookie-parser')
 const ScheduleGenerator = require('./lib/run')
+const request = require('request')
 
 var app = express();
 app.use(CookieParser());
@@ -35,15 +36,16 @@ app.get("/run", (req, res) => {
 
 
 // listen for requests
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(process.env.PORT, () => {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 var io = require('socket.io')(listener);
 
-io.on('connection', function(socket){
+io.on('connection', (socket) => {
   console.log('a user connected');
-  io.sockets.emit('salut', {top: 'kek'})
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
+  var jar = request.jar();
+  
+  socket.on('verify credentials', (data, callback) => {
+    ScheduleGenerator.verifyCredentials(data, jar, callback)
   });
 });
