@@ -14,8 +14,36 @@ $(function() {
     }
   });
   
-  $('.submit [role=submit]').click(function() {
-    var currIndex = $(this).data('index');
+  $('.submit [role=submit]').click(handleFormSubmission);
+  $('.form input').keypress(handleFormSubmission);
+  
+  socket.on('grab semesters', function(data) {
+    $('#wizard .content').removeClass('pre-loader');
+    $('#wizard .content > section').eq(1).show();
+    setTimeout(toastr.clear, 2000);
+    
+    if (!data)
+      return toastr.error('', 'No semesters found...', {timeOut: 0})
+      
+    Object.keys(data).forEach(function(semester) {
+      var semesterHTML = '<div class="checkbox">' +
+                          '<label>' +
+                            '<input type="checkbox" value="' + data[semester] + '">' + semester +
+                          '</label>' +
+                         '</div>';
+      
+      $('#semesters').append(semesterHTML);
+    })
+    console.log(data);
+  })
+  
+  
+  
+  /* functions */
+  function handleFormSubmission(e) {
+    var currIndex = e.type === "keypress" && e.keyCode == 13?
+      $(this).parents('section').find('.submit button').data('index') :
+      $(this).data('index');
     
     if (currIndex === 0) {
       var username = $('#uozoneUsername').val();
@@ -42,31 +70,8 @@ $(function() {
     } else {
       
     }
-  })
+  }
   
-  socket.on('grab semesters', function(data) {
-    $('#wizard .content').removeClass('pre-loader');
-    $('#wizard .content > section').eq(1).show();
-    setTimeout(toastr.clear, 2000);
-    
-    if (!data)
-      return toastr.error('', 'No semesters found...', {timeOut: 0})
-      
-    Object.keys(data).forEach(function(semester) {
-      var semesterHTML = '<div class="checkbox">' +
-                          '<label>' +
-                            '<input type="checkbox" value="' + data[semester] + '">' + semester +
-                          '</label>' +
-                         '</div>';
-      
-      $('#semesters').append(semesterHTML);
-    })
-    console.log(data);
-  })
-  
-  
-  
-  /* functions */
   function verifyCredentials(username, password, callback) {
     $('#loader').fadeIn(300);
     
