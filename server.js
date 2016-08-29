@@ -3,6 +3,7 @@ const express = require('express');
 const CookieParser = require('cookie-parser')
 const ScheduleGenerator = require('./lib/run')
 const request = require('request')
+const _ = require('lodash')
 
 var app = express();
 app.use(CookieParser());
@@ -45,7 +46,7 @@ var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  var jar;
+  var jar, chosenSemesters;
   
   socket.on('verify credentials', (data, clientCallback) => {
     jar = request.jar();
@@ -59,5 +60,12 @@ io.on('connection', (socket) => {
     })
   });
   
-  
+  socket.on('choose semesters', (data, clientCallback) => {
+    var ok =  _.isArray(data) ? true : false;
+
+    if (ok)
+      chosenSemesters = data;
+    
+    clientCallback(ok);
+  });
 });

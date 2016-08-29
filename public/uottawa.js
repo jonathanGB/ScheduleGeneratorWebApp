@@ -34,17 +34,19 @@ $(function() {
       
       $('#semesters').append(semesterHTML);
     })
-    console.log(data);
   })
+  
+  
+  // Object {Spring/Summer 2016: "active", Winter 2016: "previous", Fall 2016: "20169", Winter 2017: "20171"}
   
   
   
   /* functions */
   function handleFormSubmission(e) {
-    var currIndex = e.type === "keypress" && e.keyCode == 13?
+    var currIndex = e.type === "keypress" && e.keyCode == 13 ?
       $(this).parents('section').find('.submit button').data('index') :
       $(this).data('index');
-    
+
     if (currIndex === 0) {
       var username = $('#uozoneUsername').val();
       var password = $('#uozonePassword').val();
@@ -66,7 +68,24 @@ $(function() {
         }
       })
     } else if (currIndex === 1) {
-
+      var chosenSemesters = [];
+      
+      $('#semesters').find('input:checked').each(function() {
+        chosenSemesters.push($(this).val());
+      })
+      
+      if (chosenSemesters.length === 0) {
+        signalError(currIndex, 'Choose at least one semester...')
+      } else {
+        socket.emit('choose semesters', chosenSemesters, function(ok) {
+          if (!ok) {
+            signalErrors(currIndex, 'Chosen semesters not stored')
+          } else {
+            wizard.steps('next');
+            toastr.success('', 'Semesters chosen stored!');
+          }
+        })
+      }
     } else {
       
     }
