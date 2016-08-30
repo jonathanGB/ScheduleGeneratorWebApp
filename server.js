@@ -46,7 +46,7 @@ var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  var jar, chosenSemesters;
+  var jar, chosenSemesters, chosenColours = {};
   
   socket.on('verify credentials', (data, clientCallback) => {
     jar = request.jar();
