@@ -14,11 +14,20 @@ h1 {
 }
 
 h4 {
-  font-size: 17px;
+  font-size: 17px !important;
+  margin: 0;
 }
 
 .bold {
   font-weight: bold;
+}
+
+.row {
+  margin-top: 20px;
+}
+
+.modal-body.row {
+  margin: 0;
 }
 
 .hyp-btn {
@@ -39,9 +48,14 @@ h4 {
   box-shadow: none;
 }
 
+li {
+  list-style-type: none !important;
+}
+
 footer {
   margin-top: 50px;
   padding-top: 5px;
+  padding-bottom: 5px;
   border-top: 1px solid lightgrey;
   font-size: 20px;
   font-family: 'Lobster', cursive;
@@ -54,10 +68,6 @@ footer a {
 a {
   color: #4394af;
   text-decoration: none;
-}
-
-section {
-  margin-top: 15px;
 }
 
 #wizard {
@@ -77,8 +87,13 @@ div.form {
   margin-top: 15px;
 }
 
+.form-group {
+  margin: 0 !important;
+}
+
 div.submit {
   margin-top: 30px;
+  padding-bottom: 10px;
 }
 
 .input-group-addon:hover {
@@ -126,6 +141,36 @@ div.submit {
   margin-bottom: 25px;
 }
 
+.chosen-colour {
+  display: inline-block;
+  padding: 8px;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+  cursor: default;
+}
+
+.picked {
+  box-shadow: 0px 0px 12px 2px #4394af;
+  outline-style: none;
+}
+
+.course-colour {
+  border-right: 1px solid #c5c5c5;
+}
+
+.course-colour:last-child {
+  border-right: none;
+}
+
+.course-colour button {
+  width: 100%;
+  max-width: 300px;
+}
+
+.modal-body .chosen-colour {
+  cursor: pointer;
+}
 
 @media screen and (max-width: 768px) {
   body {
@@ -141,4 +186,56 @@ div.submit {
   .wizard > .steps > ul > li > a {
     margin: 0 5px;
   }
+}
+
+@media screen and (max-height: 700px) {
+  .wizard > .content {
+    min-height: 260px !important;
+  }
+}
+  
+  
+.colour-id-1 {
+  background-color: #a4bdfc;
+  color: #1d1d1d;
+}
+.colour-id-2 {
+  background-color: #7ae7bf;
+  color: #1d1d1d;
+}
+.colour-id-3 {
+  background-color: #dbadff;
+  color: #1d1d1d;
+}
+.colour-id-4 {
+  background-color: #ff887c;
+  color: #1d1d1d;
+}
+.colour-id-5 {
+  background-color: #fbd75b;
+  color: #1d1d1d;
+}
+.colour-id-6 {
+  background-color: #ffb878;
+  color: #1d1d1d;
+}
+.colour-id-7 {
+  background-color: #46d6db;
+  color: #1d1d1d;
+}
+.colour-id-8 {
+  background-color: #e1e1e1;
+  color: #1d1d1d;
+}
+.colour-id-9 {
+  background-color: #5484ed;
+  color: #1d1d1d;
+}
+.colour-id-10 {
+  background-color: #51b749;
+  color: #1d1d1d;
+}
+.colour-id-11 {
+  background-color: #dc2127;
+  color: #1d1d1d;
 }

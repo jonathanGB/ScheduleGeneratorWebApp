@@ -17,6 +17,19 @@ $(function() {
   $('.submit [role=submit]').click(handleFormSubmission);
   $('.form input').keypress(handleFormSubmission);
   
+  $('#colourPicker').on('show.bs.modal', function(e) {
+    var courseType = $(e.relatedTarget).data('type'), currColour = $(e.relatedTarget).data('colorid');
+    
+    $('#colourPicker').data('type', courseType).find('.modal-body .chosen-colour').removeClass('picked');
+    $('.colour-id-' + currColour, '#colourPicker .modal-body').addClass('picked');
+  });
+  $('#colourPicker .modal-body .chosen-colour').click(function() {
+    var courseType = $('#colourPicker').data('type'), newColour = $(this).data('colorid');
+    
+    $('.course-colour.' + courseType + ' button').data('colorid', newColour).siblings('.chosen-colour').removeClass().addClass('chosen-colour colour-id-' + newColour);
+    $('#colourPicker').modal('hide');
+  });
+  
   socket.on('grab semesters', function(data) {
     $('#wizard .content').removeClass('pre-loader');
     $('#wizard .content > section').eq(1).show();

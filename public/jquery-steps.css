@@ -143,7 +143,7 @@
     display: block;
     margin: 0.5em;
     min-height: 300px;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
     width: auto;
 
@@ -164,8 +164,8 @@
 {
     float: left;
     position: absolute;
-    width: 95%;
-    height: 95%;
+    width: 99%;
+    height: 100%;
     padding: 2.5%;
 }
 
