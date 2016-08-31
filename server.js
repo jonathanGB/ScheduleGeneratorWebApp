@@ -46,7 +46,7 @@ var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  var jar, chosenSemesters, chosenColours = {};
+  var jar, chosenSemesters, courses = {}, chosenColours = {};
   
   socket.on('verify credentials', (data, clientCallback) => {
     jar = request.jar();
@@ -67,5 +67,30 @@ io.on('connection', (socket) => {
       chosenSemesters = data;
     
     clientCallback(ok);
+    
+    // TODO: grab schedules & parse
+    // @param courses is modified directly by `grabSchedules`
+    ScheduleGenerator.grabSchedules(jar, courses, chosenSemesters, (err) => {
+      var coursesInfo = getCoursesInfo(courses);
+      
+      socket.emit('grab schedules', {
+        err,
+        coursesInfo
+      });
+    });
   });
 });
+
+function getCoursesInfo(semesters) {
+  var coursesInfo = {};
+  
+  _.forEach(semesters, (courses, semester) => {
+    coursesInfo[semester] = {};
+    
+    _.forEach(courses, (data, course) => {
+      coursesInfo[semester][course] = data.info;
+    })
+  })
+  
+  return coursesInfo;
+}

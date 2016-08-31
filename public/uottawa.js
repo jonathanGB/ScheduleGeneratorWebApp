@@ -49,6 +49,10 @@ $(function() {
     })
   })
   
+  socket.on('grab schedules', function(data) {
+    console.log(data)
+  })
+  
   
   // Object {Spring/Summer 2016: "active", Winter 2016: "previous", Fall 2016: "20169", Winter 2017: "20171"}
   
@@ -84,10 +88,10 @@ $(function() {
       var chosenSemesters = [];
       
       $('#semesters').find('input:checked').each(function() {
-        chosenSemesters.push($(this).val());
+        chosenSemesters.push([$(this).parent().text().trim(), $(this).val()]); // push [key, val] pair
       })
-      
-      if (chosenSemesters.length === 0) {
+ 
+      if (Object.keys(chosenSemesters).length === 0) {
         signalError(currIndex, 'Choose at least one semester...')
       } else {
         socket.emit('choose semesters', chosenSemesters, function(ok) {
@@ -99,8 +103,15 @@ $(function() {
           }
         })
       }
-    } else {
+    } else if (currIndex === 2) {
+      var chosenColours = {};
+      chosenColours['lecture'] = $('.course-colour.lecture button').data('colorid');
+      chosenColours['dgd'] = $('.course-colour.dgd button').data('colorid');
+      chosenColours['lab'] = $('.course-colour.lab button').data('colorid');
       
+      console.log(chosenColours);
+      // TODO: socket.emit
+      // TODO: callback show courses, ask confirmation to generate
     }
   }
   
