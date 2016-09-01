@@ -46,7 +46,7 @@ var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  var jar, chosenSemesters, courses = {}, chosenColours = {};
+  var jar, chosenSemesters, courses = {}, chosenColours;
   
   socket.on('verify credentials', (data, clientCallback) => {
     jar = request.jar();
@@ -78,6 +78,15 @@ io.on('connection', (socket) => {
         coursesInfo
       });
     });
+  });
+  
+  socket.on('choose colours', (data, clientCallback) => {
+    var ok = _.isPlainObject(data) ? true : false;
+    
+    if (ok)
+      chosenColours = data;
+      
+    clientCallback(ok);
   });
 });
 

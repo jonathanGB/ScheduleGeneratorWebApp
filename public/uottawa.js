@@ -60,15 +60,21 @@ $(function() {
     // populate 
     populateScheduleTable(data.coursesInfo);
     
-    if (selectionFinished)
+    if (selectionFinished) {
+      $('#loader').fadeOut(300);
       promptGenerateView();
-    else
+    } else {
       schedulesParsed = true;
+    }
   });
   
   
   function promptGenerateView() {
+    $('#schedule').fadeIn(500);
     
+     $('html, body').animate({
+        scrollTop: $("#schedule").offset().top - 10
+    }, 1000);
   }
   
   function populateScheduleTable(data) {
@@ -95,6 +101,7 @@ $(function() {
       tableContent += '</div>';
     });
     
+    tableContent += '<div class="text-center row generate-button"><button class="btn btn-primary btn-lg">Generate <span class="glyphicon glyphicon-ok"></span></button></div>';
     $('#schedule').html(tableContent);
   }
   
@@ -151,6 +158,20 @@ $(function() {
       chosenColours['lab'] = $('.course-colour.lab button').data('colorid');
       
       console.log(chosenColours);
+      socket.emit('choose colours', chosenColours, function(ok) {
+        if (!ok) {
+          signalErrors(currIndex, 'Chosen colours not stored')
+        } else {
+          toastr.success('', 'Colours chosen stored!');
+          
+          if (schedulesParsed) {
+            promptGenerateView();
+          } else {
+            selectionFinished = true;
+            $('#loader').fadeIn(300);
+          }
+        }
+      })
       // TODO: socket.emit
       // TODO: callback show courses, ask confirmation to generate
     }

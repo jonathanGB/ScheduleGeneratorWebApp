@@ -193,6 +193,13 @@ div.submit {
   font-size: 15px;
 }
 
+.generate-button {
+  margin-top: 0;
+  background-color: white;
+  padding: 10px 0 20px 0;
+  border-radius: 10px;
+}
+
 .semester-table:first-child {
   border: 0;
 }
