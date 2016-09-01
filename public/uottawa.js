@@ -32,8 +32,8 @@ $(function() {
   });
   
   $('#schedule').on('click', 'button', function() {
-    $(this).addClass('disabled');
-    console.log('GENERATE')
+    $(this).attr('disabled', true);
+
     socket.emit('generate schedule');
   });
   
@@ -74,6 +74,20 @@ $(function() {
     }
   });
   
+  socket.on('inserted course', function(data) {
+    var colourFeedback = data.ok ? 'green': 'red';
+    var glyphiconFeedback = data.ok ? 'glyphicon glyphicon-ok-circle' : 'glyphicon glyphicon-remove-circle';
+    
+    $('[id="' + data.course[0] + '"] [id="' + data.course[1] + '"] li').eq(data.course[2]).css({'color': colourFeedback, 'font-weight': 'bold'}).append(' <span class="' + glyphiconFeedback + '"></span>');
+  });
+  
+  socket.on('inserted all courses', function(ok) {
+    console.log('ok', ok);
+    ok ?
+      toastr.success('', 'All courses are now in your calendar!', {timeOut: 0}):
+      toastr.error('', 'There was at least one error while inserting events to your calendar...', {timeOut: 0});
+  })
+  
   
   function promptGenerateView() {
     $('#schedule').fadeIn(500);
@@ -87,12 +101,12 @@ $(function() {
     var tableContent = '';
     
     Object.keys(data).forEach(function(semester) {
-      tableContent += '<div class="semester-table row" data-id="' + semester + '">';
+      tableContent += '<div class="semester-table row" id="' + semester + '">';
       tableContent += '<h2>' + semester + '</h2>';
       
       var semesterObj = data[semester];
       Object.keys(semesterObj).forEach(function(course) {
-        tableContent += '<div class="course-table col-xs-6" data-id="' + course + '">';
+        tableContent += '<div class="course-table col-xs-6" id="' + course + '">';
         tableContent += '<h3>' + course + '</h3>';
         tableContent += '<ul>';
         

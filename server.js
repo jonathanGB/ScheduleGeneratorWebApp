@@ -1,12 +1,11 @@
 // init project
 const express = require('express');
-const CookieParser = require('cookie-parser')
 const ScheduleGenerator = require('./lib/run')
 const request = require('request')
+const url = require('url')
 const _ = require('lodash')
 
 var app = express();
-app.use(CookieParser());
 app.use(express.static('public'));
 
 const ALLOWED_SCHOOLS = ['uottawa'];
@@ -45,8 +44,8 @@ var listener = app.listen(process.env.PORT, () => {
 var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
-  var jar, chosenSemesters, courses = {}, chosenColours;
+  console.log('a user connected')
+  var jar, chosenSemesters, courses = {}, chosenColours, code = url.parse(socket.request.headers.referer, true).query.code;
   
   socket.on('verify credentials', (data, clientCallback) => {
     jar = request.jar();
@@ -72,7 +71,7 @@ io.on('connection', (socket) => {
     // @param courses is modified directly by `grabSchedules`
     ScheduleGenerator.grabSchedules(jar, courses, chosenSemesters, (err) => {
       var coursesInfo = getCoursesInfo(courses);
-      
+      console.log(JSON.stringify(courses))
       socket.emit('grab schedules', {
         err,
         coursesInfo
@@ -90,7 +89,13 @@ io.on('connection', (socket) => {
   });
   
   socket.on('generate schedule', () => {
-    console.log('gotta do some stuff here...')
+    ScheduleGenerator.insertCourses(code, courses, chosenColours, (ok, course) => {
+      socket.emit('inserted course', {ok, course});
+    }, (ok) => { // this callback is called when all courses are inserted (or there was an error)
+      var status = ok === null ? true : false;
+      
+      socket.emit('inserted all courses', status);
+    })
   })
 });
 
