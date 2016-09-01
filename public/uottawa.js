@@ -31,6 +31,12 @@ $(function() {
     $('#colourPicker').modal('hide');
   });
   
+  $('#schedule').on('click', 'button', function() {
+    $(this).addClass('disabled');
+    console.log('GENERATE')
+    socket.emit('generate schedule');
+  });
+  
   socket.on('grab semesters', function(data) {
     $('#wizard .content').removeClass('pre-loader');
     $('#wizard .content > section').eq(1).show();
@@ -81,12 +87,12 @@ $(function() {
     var tableContent = '';
     
     Object.keys(data).forEach(function(semester) {
-      tableContent += '<div class="semester-table row">'
+      tableContent += '<div class="semester-table row" data-id="' + semester + '">';
       tableContent += '<h2>' + semester + '</h2>';
       
       var semesterObj = data[semester];
       Object.keys(semesterObj).forEach(function(course) {
-        tableContent += '<div class="course-table col-xs-6">';
+        tableContent += '<div class="course-table col-xs-6" data-id="' + course + '">';
         tableContent += '<h3>' + course + '</h3>';
         tableContent += '<ul>';
         

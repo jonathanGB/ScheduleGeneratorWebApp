@@ -189,8 +189,25 @@ div.submit {
   border-top: 1px solid #bfbdbd;
 }
 
+#schedule ul {
+  padding: 0;
+  display: inline-block;
+  margin: 0 auto;
+}
+
+#schedule {
+  word-wrap: break-word;
+}
+
 .semester-table li {
   font-size: 15px;
+  font-style: italic;
+  padding: 5px 0;
+  border-bottom: 1px solid #bfbdbd;
+}
+
+.semester-table li:last-child {
+  border-bottom: 0;
 }
 
 .generate-button {
@@ -207,6 +224,15 @@ div.submit {
 @media screen and (max-width: 768px) {
   body {
     margin: 0;
+  }
+  
+  #schedule h3 {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  #schedule li {
+    font-size: 12px;
   }
 }
 

@@ -88,6 +88,10 @@ io.on('connection', (socket) => {
       
     clientCallback(ok);
   });
+  
+  socket.on('generate schedule', () => {
+    console.log('gotta do some stuff here...')
+  })
 });
 
 function getCoursesInfo(semesters) {
