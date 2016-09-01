@@ -52,6 +52,12 @@ li {
   list-style-type: none !important;
 }
 
+.semester-table {
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+}
+
 footer {
   margin-top: 50px;
   padding-top: 5px;
@@ -70,7 +76,7 @@ a {
   text-decoration: none;
 }
 
-#wizard {
+#wizard, #schedule {
   display: none;
 }
 
@@ -147,7 +153,7 @@ div.submit {
   border-radius: 10px;
   margin-top: 10px;
   font-weight: bold;
-  cursor: default;
+  height: 32px;
 }
 
 .picked {
@@ -170,6 +176,25 @@ div.submit {
 
 .modal-body .chosen-colour {
   cursor: pointer;
+}
+
+#schedule {
+  border: 1px solid #bfbdbd;
+  border-radius: 10px;
+  margin-top: 65px;
+}
+
+.semester-table {
+  margin-top: 0;
+  border-top: 1px solid #bfbdbd;
+}
+
+.semester-table li {
+  font-size: 15px;
+}
+
+.semester-table:first-child {
+  border: 0;
 }
 
 @media screen and (max-width: 768px) {

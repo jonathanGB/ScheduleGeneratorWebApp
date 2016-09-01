@@ -58,28 +58,19 @@
           <h4 class="bold">Choose custom colours for different types of classes, if you want to...</h4>
           <div class="row text-center">
             <div class="col-xs-4 course-colour lecture">
-                <button type="button" class="btn btn-info bold" data-type="lecture" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn colour-id-1 bold" data-type="lecture" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
                   Lecture
                 </button> <br>
-                <div class="chosen-colour colour-id-1">
-                  Current
-                </div>
             </div>
             <div class="col-xs-4 course-colour dgd">
-                <button type="button" class="btn btn-info bold" data-type="dgd" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn colour-id-1 bold" data-type="dgd" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
                   DGD
                 </button> <br>
-                <div class="chosen-colour colour-id-1">
-                  Current
-                </div>
             </div>
             <div class="col-xs-4 course-colour lab">
-                <button type="button" class="btn btn-info bold" data-type="lab" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn colour-id-1 bold" data-type="lab" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
                   Lab
                 </button> <br>
-                <div class="chosen-colour colour-id-1">
-                  Current
-                </div>
             </div>
           </div>
           <div class="submit">
@@ -87,6 +78,7 @@
           </div>
         </section>
       </div>
+      <div id="schedule" class="container-fluid"><!-- Dynamically Populated --></div>
     </main>
 
     <footer>
@@ -99,20 +91,20 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Custom colour picker</h4>
+          <h4 class="modal-title">Pick a custom colour</h4>
         </div>
         <div class="modal-body row">
-          <div class="colour-id-1 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5" data-colorid="1">Pick</div>
-          <div class="colour-id-2 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="2">Pick</div>
-          <div class="colour-id-3 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5" data-colorid="3">Pick</div>
-          <div class="colour-id-4 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5 col-xs-offset-2" data-colorid="4">Pick</div>
-          <div class="colour-id-5 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5" data-colorid="5">Pick</div>
-          <div class="colour-id-6 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="6">Pick</div>
-          <div class="colour-id-7 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5" data-colorid="7">Pick</div>
-          <div class="colour-id-8 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="8">Pick</div>
-          <div class="colour-id-9 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5" data-colorid="9">Pick</div>
-          <div class="colour-id-10 chosen-colour col-sm-5 col-sm-offset-0 col-xs-5 col-xs-offset-2" data-colorid="10">Pick</div>
-          <div class="colour-id-11 chosen-colour col-sm-5 col-sm-offset-2 col-xs-offset-3 col-xs-6" data-colorid="11">Pick</div>
+          <div class="colour-id-1 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5" data-colorid="1"></div>
+          <div class="colour-id-2 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="2"></div>
+          <div class="colour-id-3 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5" data-colorid="3"></div>
+          <div class="colour-id-4 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5 col-xs-offset-2" data-colorid="4"></div>
+          <div class="colour-id-5 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5" data-colorid="5"></div>
+          <div class="colour-id-6 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="6"></div>
+          <div class="colour-id-7 chosen-colour col-sm-3 col-sm-offset-0 col-xs-5" data-colorid="7"></div>
+          <div class="colour-id-8 chosen-colour col-sm-4 col-sm-offset-1 col-xs-5 col-xs-offset-2" data-colorid="8"></div>
+          <div class="colour-id-9 chosen-colour col-sm-3 col-sm-offset-1 col-xs-5" data-colorid="9"></div>
+          <div class="colour-id-10 chosen-colour col-sm-5 col-sm-offset-0 col-xs-5 col-xs-offset-2" data-colorid="10"></div>
+          <div class="colour-id-11 chosen-colour col-sm-5 col-sm-offset-2 col-xs-offset-3 col-xs-6" data-colorid="11"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

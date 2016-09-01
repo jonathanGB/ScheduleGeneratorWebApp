@@ -1,6 +1,7 @@
 $(function() {
   var socket = io();
   var wizard = $('#wizard');
+  var schedulesParsed = false, selectionFinished = false; // two flags, both must be true to show final generation panel 
   
   wizard.steps({
     headerTag: "h3",
@@ -26,7 +27,7 @@ $(function() {
   $('#colourPicker .modal-body .chosen-colour').click(function() {
     var courseType = $('#colourPicker').data('type'), newColour = $(this).data('colorid');
     
-    $('.course-colour.' + courseType + ' button').data('colorid', newColour).siblings('.chosen-colour').removeClass().addClass('chosen-colour colour-id-' + newColour);
+    $('.course-colour.' + courseType + ' button').data('colorid', newColour).removeClass().addClass('btn bold colour-id-' + newColour);
     $('#colourPicker').modal('hide');
   });
   
@@ -50,12 +51,52 @@ $(function() {
   })
   
   socket.on('grab schedules', function(data) {
+    if (data.err)
+      return toastr.error('', 'Problem while grabbing schedules...');
+      
+    toastr.info('', 'Schedules grabbed!');
     console.log(data)
-  })
+    
+    // populate 
+    populateScheduleTable(data.coursesInfo);
+    
+    if (selectionFinished)
+      promptGenerateView();
+    else
+      schedulesParsed = true;
+  });
   
   
-  // Object {Spring/Summer 2016: "active", Winter 2016: "previous", Fall 2016: "20169", Winter 2017: "20171"}
+  function promptGenerateView() {
+    
+  }
   
+  function populateScheduleTable(data) {
+    var tableContent = '';
+    
+    Object.keys(data).forEach(function(semester) {
+      tableContent += '<div class="semester-table row">'
+      tableContent += '<h2>' + semester + '</h2>';
+      
+      var semesterObj = data[semester];
+      Object.keys(semesterObj).forEach(function(course) {
+        tableContent += '<div class="course-table col-xs-6">';
+        tableContent += '<h3>' + course + '</h3>';
+        tableContent += '<ul>';
+        
+        semesterObj[course].forEach(function(period) {
+          tableContent += '<li>' + period + '</li>';
+        })
+        
+        tableContent += '</ul>';
+        tableContent += '</div>';
+      });
+      
+      tableContent += '</div>';
+    });
+    
+    $('#schedule').html(tableContent);
+  }
   
   
   /* functions */
@@ -142,7 +183,7 @@ $(function() {
     "onclick": null,
     "showDuration": "300",
     "hideDuration": "1000",
-    "timeOut": "2000",
+    "timeOut": "5000",
     "extendedTimeOut": "1000",
     "showEasing": "swing",
     "hideEasing": "linear",
