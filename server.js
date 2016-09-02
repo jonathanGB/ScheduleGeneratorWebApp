@@ -41,6 +41,7 @@ app.get("/run", (req, res) => {
 var listener = app.listen(process.env.PORT, () => {
 	console.log('Your app is listening on port ' + listener.address().port);
 });
+listener.timeout = 300000; // timeout of 5mins
 
 /* Websockets handling */
 var io = require('socket.io')(listener);
