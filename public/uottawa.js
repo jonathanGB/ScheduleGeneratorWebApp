@@ -2,7 +2,7 @@ $(function () {
 	var socket = io();
 	var wizard = $('#wizard');
 	var schedulesParsed = false,
-		selectionFinished = false; // two flags, both must be true to show final generation panel 
+		selectionFinished = false; // two flags, both must be true to show final generation panel
 
 	wizard.steps({
 		headerTag: "h3",
@@ -10,7 +10,6 @@ $(function () {
 		transitionEffect: "slideLeft",
 		enablePagination: false,
 		autoFocus: true,
-		forceMoveForward: true,
 		onInit: function () {
 			wizard.fadeIn('slow')
 		}
@@ -18,6 +17,9 @@ $(function () {
 
 	$('.submit [role=submit]').click(handleFormSubmission);
 	$('.form input').keypress(handleFormSubmission);
+	$('.go-back').click(function() {
+		wizard.steps('previous');
+	});
 
 	$('#colourPicker').on('show.bs.modal', function (e) {
 		var courseType = $(e.relatedTarget).data('type'),
@@ -67,7 +69,7 @@ $(function () {
 
 		toastr.info('', 'Schedules grabbed!');
 
-		// populate 
+		// populate
 		populateScheduleTable(data.coursesInfo);
 
 		if (selectionFinished) {
