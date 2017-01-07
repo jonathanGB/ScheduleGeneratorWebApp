@@ -22,6 +22,10 @@ h4 {
   font-weight: bold;
 }
 
+.glyphicon {
+  top: 3px;
+}
+
 .row {
   margin-top: 20px;
 }
@@ -125,7 +129,7 @@ div.submit {
 }
 
 .pre-loader {
-  background: url(https://cdn.hyperdev.com/us-east-1%3A3f3653fe-5bbe-4236-97c8-3748b536e20c%2Fellipsis.gif) center no-repeat, rgba(0,0,0,0.75) !important;
+  background: url(/assets/small-loader.gif) center no-repeat, rgba(0,0,0,0.75) !important;
 }
 
 #wizard div.content {
@@ -225,12 +229,12 @@ div.submit {
   body {
     margin: 0;
   }
-  
+
   #schedule h3 {
     font-size: 14px;
     font-weight: bold;
   }
-  
+
   #schedule li {
     font-size: 12px;
   }
@@ -240,7 +244,7 @@ div.submit {
   .wizard > .steps > ul > li {
     width: auto !important;
   }
-  
+
   .wizard > .steps > ul > li > a {
     margin: 0 5px;
   }
@@ -251,8 +255,8 @@ div.submit {
     min-height: 260px !important;
   }
 }
-  
-  
+
+
 .colour-id-1 {
   background-color: #a4bdfc;
   color: #1d1d1d;

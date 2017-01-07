@@ -15,13 +15,13 @@
   </head>
   <body>
     <header>
-      <a href="/"><img width="100" height="100" src="https://cdn.hyperdev.com/us-east-1%3A3f3653fe-5bbe-4236-97c8-3748b536e20c%2Fcalendar.png" alt="calendar icon"></a>
+      <a href="/"><img width="100" height="100" src="/assets/calendar.png" alt="calendar icon"></a>
       <h1>
         Schedule Generator - uOttawa
       </h1>
     </header>
     <div id="loader">
-      <img src="https://cdn.hyperdev.com/us-east-1%3A3f3653fe-5bbe-4236-97c8-3748b536e20c%2Fwave.gif" alt="loader gif">
+      <img src="/assets/big-loader.gif" alt="loader gif">
     </div>
     <main>
       <div id="wizard">
@@ -43,28 +43,25 @@
             <button class="btn btn-lg btn-primary" role="submit" data-index="0">Next <span class="glyphicon glyphicon-send"></span></button>
           </div>
         </section>
-        
+
         <h3>Semesters</h3>
         <section>
           <h4 class="bold">Choose semesters to generate...</h4>
           <div id="semesters"><!-- Dynamically inserted --></div>
           <div class="submit">
+            <button class="btn btn-lg btn-default go-back"><span class="glyphicon glyphicon-menu-left"></span> Back</button>
             <button class="btn btn-lg btn-primary" role="submit" data-index="1">Next <span class="glyphicon glyphicon-send"></span></button>
           </div>
         </section>
-        
+
         <h3>Colours</h3>
         <section>
           <h4 class="bold">Choose custom colours for different types of classes, if you want to...</h4>
+          <h4>"Others" includes periods like DGDs, tutorials, and seminars</h4>
           <div class="row text-center">
             <div class="col-xs-4 course-colour lecture">
                 <button type="button" class="btn colour-id-1 bold" data-type="lecture" data-toggle="modal" data-target="#colourPicker" data-colorid="1" aria-haspopup="true" aria-expanded="false">
                   Lecture
-                </button> <br>
-            </div>
-            <div class="col-xs-4 course-colour dgd">
-                <button type="button" class="btn colour-id-2 bold" data-type="dgd" data-toggle="modal" data-target="#colourPicker" data-colorid="2" aria-haspopup="true" aria-expanded="false">
-                  DGD
                 </button> <br>
             </div>
             <div class="col-xs-4 course-colour lab">
@@ -72,8 +69,14 @@
                   Lab
                 </button> <br>
             </div>
+            <div class="col-xs-4 course-colour dgd">
+                <button type="button" class="btn colour-id-2 bold" data-type="dgd" data-toggle="modal" data-target="#colourPicker" data-colorid="2" aria-haspopup="true" aria-expanded="false">
+                  Others
+                </button> <br>
+            </div>
           </div>
           <div class="submit">
+            <button class="btn btn-lg btn-default go-back"><span class="glyphicon glyphicon-menu-left"></span> Back</button>
             <button class="btn btn-lg btn-primary" role="submit" data-index="2">Next <span class="glyphicon glyphicon-send"></span></button>
           </div>
         </section>
@@ -85,7 +88,7 @@
       Built by <a href="http://jonathanGB.com">Jonathan Guillotte-Blouin</a> <br>
       ¯\_(ツ)_/¯
     </footer>
-    
+
   <div class="modal fade" tabindex="-1" role="dialog" id="colourPicker">
     <div class="modal-dialog" role="document">
       <div class="modal-content">

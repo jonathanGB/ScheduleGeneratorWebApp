@@ -10,7 +10,6 @@ $(function () {
 		transitionEffect: "slideLeft",
 		enablePagination: false,
 		autoFocus: true,
-		forceMoveForward: true,
 		onInit: function () {
 			wizard.fadeIn('slow')
 		}
@@ -18,6 +17,9 @@ $(function () {
 
 	$('.submit [role=submit]').click(handleFormSubmission);
 	$('.form input').keypress(handleFormSubmission);
+	$('.go-back').click(function() {
+		wizard.steps('previous');
+	});
 
 	$('#colourPicker').on('show.bs.modal', function (e) {
 		var courseType = $(e.relatedTarget).data('type'),

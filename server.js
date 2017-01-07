@@ -4,8 +4,10 @@ const ScheduleGenerator = require('./lib/run')
 const request = require('request')
 const url = require('url')
 const _ = require('lodash')
+const sslRedirect = require('heroku-ssl-redirect')
 
 var app = express();
+app.use(sslRedirect());
 app.use(express.static('public'));
 
 const ALLOWED_SCHOOLS = ['uottawa'];
@@ -39,6 +41,7 @@ app.get("/run", (req, res) => {
 var listener = app.listen(process.env.PORT, () => {
 	console.log('Your app is listening on port ' + listener.address().port);
 });
+listener.timeout = 300000; // timeout of 5mins
 
 /* Websockets handling */
 var io = require('socket.io')(listener);
