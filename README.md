@@ -1,13 +1,8 @@
 # ScheduleGenerator WebApp
 
+v1 of Schedule Generator webapp. This is based on [a CLI I previously built](https://github.com/jonathanGB/ScheduleParserAndGenerator).
 
-#### In development
-
-
-
------------------
-
-Hosted on Hyperdev by *Fog Creek Software*. More about it [can be found here](http://www.joelonsoftware.com/items/2016/05/30.html)
+Relies on websockets - `socket.io`.
 
 -----------------
 
