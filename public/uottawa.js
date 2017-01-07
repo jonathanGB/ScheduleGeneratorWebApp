@@ -2,7 +2,7 @@ $(function () {
 	var socket = io();
 	var wizard = $('#wizard');
 	var schedulesParsed = false,
-		selectionFinished = false; // two flags, both must be true to show final generation panel 
+		selectionFinished = false; // two flags, both must be true to show final generation panel
 
 	wizard.steps({
 		headerTag: "h3",
@@ -67,7 +67,7 @@ $(function () {
 
 		toastr.info('', 'Schedules grabbed!');
 
-		// populate 
+		// populate
 		populateScheduleTable(data.coursesInfo);
 
 		if (selectionFinished) {
@@ -115,7 +115,11 @@ $(function () {
 			tableContent += '<h2>' + semester + '</h2>';
 
 			var semesterObj = data[semester];
-			Object.keys(semesterObj).forEach(function (course) {
+			Object.keys(semesterObj).forEach(function (course, index) {
+				if (index % 2 === 0) {
+					tableContent += '<div class="row">';
+				}
+
 				tableContent += '<div class="course-table col-xs-6" id="' + course + '">';
 				tableContent += '<h3>' + course + '</h3>';
 				tableContent += '<ul>';
@@ -126,6 +130,10 @@ $(function () {
 
 				tableContent += '</ul>';
 				tableContent += '</div>';
+
+				if (index % 2 === 1 || index === data.length - 1) {
+					tableContent += '</div>';
+				}
 			});
 
 			tableContent += '</div>';
