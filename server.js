@@ -31,8 +31,16 @@ app.get("/run", (req, res) => {
 
 	if (!code || code === 'access_denied' || !school || ALLOWED_SCHOOLS.indexOf(school) === -1)
 		res.redirect('/');
-	else
-		res.sendFile(`${__dirname}/views/${school}.html`);
+	else {
+		// validate code
+		ScheduleGenerator.verifyAuth(code, (ok) => {
+			if (ok) {
+				res.sendFile(`${__dirname}/views/${school}.html`);
+			} else {
+				res.redirect('/');
+			}
+		})
+	}
 })
 
 
