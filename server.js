@@ -51,6 +51,12 @@ io.on('connection', (socket) => {
 	var jar, chosenSemesters, courses = {},
 		chosenColours, code = url.parse(socket.request.headers.referer, true).query.code;
 
+	// clean closure memory
+	socket.on('disconnect', () => {
+		console.log('a user disconnected')
+		jar = null, chosenSemesters = null, courses = null, chosenColours = null, code = null
+	})
+
 	socket.on('verify credentials', (data, clientCallback) => {
 		jar = request.jar();
 
