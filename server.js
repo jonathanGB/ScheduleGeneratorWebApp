@@ -11,6 +11,7 @@ app.use(sslRedirect());
 app.use(express.static('public'));
 
 const ALLOWED_SCHOOLS = ['uottawa'];
+let gAuths = {} // store auth tokens for access in router and in websocket handler
 
 
 // routes
@@ -33,8 +34,9 @@ app.get("/run", (req, res) => {
 		res.redirect('/');
 	else {
 		// validate code
-		ScheduleGenerator.verifyAuth(code, (ok) => {
-			if (ok) {
+		ScheduleGenerator.verifyAuth(code, (gAuth) => {
+			if (gAuth) {
+				gAuths[code] = gAuth
 				res.sendFile(`${__dirname}/views/${school}.html`);
 			} else {
 				res.redirect('/');
@@ -107,16 +109,23 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('generate schedule', () => {
-		ScheduleGenerator.insertCourses(code, courses, chosenColours, (ok, course) => {
-			socket.emit('inserted course', {
-				ok,
-				course
-			});
-		}, (ok) => { // this callback is called when all courses are inserted (or there was an error)
-			var status = ok === null ? true : false;
+		let gAuth = gAuths[code]
+		if (gAuth) {
+			delete gAuths[code]
 
-			socket.emit('inserted all courses', status);
-		})
+			ScheduleGenerator.insertCourses(gAuth, courses, chosenColours, (ok, course) => {
+				socket.emit('inserted course', {
+					ok,
+					course
+				});
+			}, (ok) => { // this callback is called when all courses are inserted (or there was an error)
+				var status = ok === null ? true : false;
+
+				socket.emit('inserted all courses', status);
+			})
+		} else {
+			socket.emit('inserted all courses', false)
+		}
 	})
 });
 
@@ -133,3 +142,13 @@ function getCoursesInfo(semesters) {
 
 	return coursesInfo;
 }
+
+setInterval(() => { // clean gAuths every hour
+	let now = Date.now()
+
+	Object.keys(gAuths).forEach(key => {
+		if (gAuths[key].credentials.expiry_date <= now) {
+			delete gAuths[key]
+		}
+	})
+}, 1000 * 3600)
