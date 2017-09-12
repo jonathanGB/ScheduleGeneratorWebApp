@@ -75,6 +75,12 @@ footer a {
   text-decoration: none;
 }
 
+#githubRepo {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+
 a {
   color: #4394af;
   text-decoration: none;
