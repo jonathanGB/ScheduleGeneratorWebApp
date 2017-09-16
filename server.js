@@ -30,7 +30,7 @@ app.get("/run", (req, res) => {
 	var code = req.query.code;
 	var school = req.query.state;
 
-	if (!code || code === 'access_denied' || !school || ALLOWED_SCHOOLS.indexOf(school) === -1)
+	if (!code || code === 'access_denied' || !school || !ALLOWED_SCHOOLS.includes(school))
 		res.redirect('/');
 	else {
 		// validate code
