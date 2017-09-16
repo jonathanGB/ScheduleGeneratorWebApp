@@ -64,7 +64,10 @@ io.on('connection', (socket) => {
 	// clean closure memory
 	socket.on('disconnect', () => {
 		console.log('a user disconnected')
-		jar = null, chosenSemesters = null, courses = null, chosenColours = null, code = null
+
+		ScheduleGenerator.logoutUser(jar, () => {
+			jar = null, chosenSemesters = null, courses = null, chosenColours = null, code = null
+		});
 	})
 
 	socket.on('verify credentials', (data, clientCallback) => {
