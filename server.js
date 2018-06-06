@@ -58,15 +58,16 @@ var io = require('socket.io')(listener);
 
 io.on('connection', (socket) => {
 	console.log('a user connected')
-	var jar, chosenSemesters, courses = {},
+	var jar, chosenSemesters, courses = {}, insertedEventIds = [],
 		chosenColours, code = url.parse(socket.request.headers.referer, true).query.code;
 
 	// clean closure memory
 	socket.on('disconnect', () => {
-		console.log('a user disconnected')
+		console.log('a user disconnected');
+		delete gAuths[code];
 
 		ScheduleGenerator.logoutUser(jar, () => {
-			jar = null, chosenSemesters = null, courses = null, chosenColours = null, code = null
+			jar = null, chosenSemesters = null, courses = null, chosenColours = null, code = null, insertedEventIds = null;
 		});
 	})
 
@@ -112,24 +113,36 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('generate schedule', () => {
-		let gAuth = gAuths[code]
+		const gAuth = gAuths[code]
 		if (gAuth) {
-			delete gAuths[code]
-
-			ScheduleGenerator.insertCourses(gAuth, courses, chosenColours, (ok, course) => {
+			ScheduleGenerator.insertCourses(gAuth, courses, chosenColours, (ok, course, insertedEventId) => {
 				socket.emit('inserted course', {
 					ok,
 					course
 				});
+
+				if (insertedEventId) {
+					insertedEventIds.push(insertedEventId);
+				}
 			}, (ok) => { // this callback is called when all courses are inserted (or there was an error)
 				var status = ok === null ? true : false;
 
 				socket.emit('inserted all courses', status);
+				console.log(insertedEventIds)
 			})
 		} else {
 			socket.emit('inserted all courses', false)
 		}
-	})
+	});
+
+	socket.on('delete schedule', (_, clientCallback) => {
+		const gAuth = gAuths[code];
+		if (!gAuth) {
+			return clientCallback(new Error('Invalid gAuth'));
+		}
+
+		ScheduleGenerator.deleteCourses(gAuth, insertedEventIds, clientCallback);
+	});
 });
 
 function getCoursesInfo(semesters) {

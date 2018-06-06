@@ -98,6 +98,21 @@ $(function () {
 			toastr.error('', 'There was at least one error while inserting events to your calendar...', {
 				timeOut: 0
 			});
+
+		toastr.info('', 'Want to remove the courses just added to your calendar? Click here!', {
+			timeOut: 0,
+			onclick: () => {
+				socket.emit('delete schedule', null, err => {
+					!err ?
+						toastr.success('', 'All courses were removed from your calendar!', {
+							timeOut: 0
+						}) :
+						toastr.error('', 'There was at least one error while deleting courses from your calendar...', {
+							timeOut: 0
+						});
+				});
+			},
+		})
 	})
 
 
